@@ -13,9 +13,53 @@ app.get('/tab', (req, res) => {
     res.sendFile(__dirname + '/tab/index.html');
 });
 
+app.get('/room1', (req, res) => {
+    res.sendFile(__dirname + '/room1/index.html');
+});
+
+app.get('/room2', (req, res) => {
+    res.sendFile(__dirname + '/room2/index.html');
+});
+
+app.get('/room3', (req, res) => {
+    res.sendFile(__dirname + '/room3/index.html');
+});
+
 var rooms = {};
 var list_tokens = [];
 const types = [];
+
+const rooms_scheme = {
+    room1: {
+        name: 'Movies',
+        id: 'room1',
+        scheme: [
+            {'label': 'Name', 'cell_type': 'input/text'},
+            {'label': 'Start date', 'cell_type': 'input/date'},
+            {'label': 'Stop date', 'cell_type': 'input/date'},
+        ],
+    },
+    room2: {
+        name: 'Users',
+        id: 'room2',
+        scheme: [
+            {'label': 'Firstname', 'cell_type': 'input/text'},
+            {'label': 'Lastname', 'cell_type': 'input/text'},
+            {'label': 'Booked', 'cell_type': 'input/checkbox'},
+        ],
+    },
+    room3: {
+        name: 'Rights',
+        id: 'room3',
+        scheme: [
+            {'label': 'Permission', 'cell_type': 'span/text'},
+            {'label': 'ADMIN', 'cell_type': 'input/checkbox'},
+            {'label': 'MANAGER', 'cell_type': 'input/checkbox'},
+            {'label': 'PRESS', 'cell_type': 'input/checkbox'},
+            {'label': 'USER', 'cell_type': 'input/checkbox'},
+        ],
+    },
+}
 
 const range = 32;
 
@@ -53,13 +97,15 @@ const random_token = (type = undefined) => {
 // }
 
 function roomExists(room_id) {
-    // check_symfony
+    // check_symfony or rooms_scheme
+    // put rooms_scheme in txt files
     return true;
 }
 
 io.on('connection', (socket) => {
     io.emit('user_id', socket.id);
     socket.on('connect_room', (msg) => {
+        console.log(msg);
         if(msg.room_id == undefined) {
             console.log('No room specified');
             io.emit('connect_room', {
@@ -74,16 +120,25 @@ io.on('connection', (socket) => {
                 'message': 'Room does not exist'
             });
         }
+        console.log(`A new user enter the room`);
+        let id = undefined;
         if(msg.user_id == undefined) {
             console.log('Create id');
-            let id = random_token();
+            id = random_token();
+            console.log(`New user with id ${id}`);
             list_tokens.push(id);
-            io.emit('connect_room', {
-                id: id,
-                ids: list_tokens,
-                // envoyer état de la room
-            });
         }
+        else {
+            console.log(`New user with id ${msg.user_id}`);
+            id = msg.user_id;
+            list_tokens.push(msg.user_id);
+        }
+        io.emit('connect_room', {
+            id: id,
+            ids: list_tokens,
+            settings: rooms_scheme[msg.room_id],
+            // envoyer état de la room
+        });
         // io.emit('connect', rooms[msg.room_id])
     })
     socket.on('click_cell', (msg) => {
@@ -100,13 +155,14 @@ io.on('connection', (socket) => {
         io.emit('leave_cell', {
             'cell': msg.cell_id,
             'user': msg.user_id,
+            'cell_value': msg.cell_value,
         });
     })
     socket.on('chat message', (msg) => {
       io.emit('chat message', msg);
     });
     socket.on('user_leave', (msg) => {
-        console.log('User leave');
+        console.log(`User ${msg.id} left the room`);
         list_tokens.splice(list_tokens.indexOf(msg.id), 1);
         io.emit('user_leave', {
             message: `${msg.id} s'est déconnecté`

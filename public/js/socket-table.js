@@ -1,18 +1,25 @@
-var socket = io();
-
-const room = {
-    id: getRoom(),
-    
-};
-
-var id = null;
-
 const byId = function(selector) {
     return document.getElementById(selector);
 }
 
+const oneByType = function(selector) {
+    return document.querySelector(selector);
+}
+
+const allByType = function(selector) {
+    return document.querySelectorAll(selector);
+}
+
 function getRoom() {
-    return new URL(location.href).searchParams.get("room");
+    return oneByType("body").id;
+}
+
+function addInto(parent, content) {
+    parent.innerHTML += content;
+}
+
+function insertInto(parent, content) {
+    parent.innerHTML = content;
 }
 
 function init_cells() {
@@ -45,6 +52,93 @@ function initTrigger(elem) {
     });
 }
 
+function buildInterface() {
+    console.log(room.id);
+    console.log(room.name);
+    let index = -1; tab = [];
+    tab[++index] = `<div class="head">`;
+    if(room.name) {
+        tab[++index] = `<div class="room-name">${room.name}</div>`;
+    }
+    // if(room.id) {
+    //     tab[++index] = `<div class="room-id">${room.id}</div>`;
+    // }
+    tab[++index] = `</div>`;
+
+    addInto(oneByType('body'), tab.join(' '));
+}
+
+function buildTable() {
+    console.log(room.scheme);
+    let index = -1; tab = [];
+    tab[++index] = `<table class="table">`;
+    tab[++index] = `<thead>`;
+    tab[++index] = `<tr class="last-for-add">`;
+    tab[++index] = `<th scope="col">Line</th>`;
+    for(let i = 0; i < room.scheme.length; i++) {
+        tab[++index] = `<th scope="col">${room.scheme[i].label}</th>`;
+    }
+    tab[++index] = `</tr>`;
+    tab[++index] = `</thead>`;
+    tab[++index] = `<tbody>`;
+    tab[++index] = `</tbody>`;
+    tab[++index] = `</table>`;
+
+    addInto(oneByType('body'), tab.join(' '));
+    // on build emit get_state
+    // for i <th scope="row">i</th>
+
+    fillState(12);
+}
+
+function fillState(base = null) {
+    console.log(room.state);
+    let index = -1; tab = [];
+    // base is random number used for tests
+    if(base != null) {
+        for(let i = 0; i < base; i++) {
+            tab[++index] = `<tr>`;
+            tab[++index] = `<th scope="row">${i + 1}</th>`;
+            for(let j = 0; j < room.scheme.length; j++) {
+                tab[++index] = `<td id="${i + 1}-${j + 1}" class="sheet-cell">`;
+                tab[++index] = `<span class="active"></span>`;
+                tab[++index] = `<input class="inactive"/>`;
+                tab[++index] = `</td>`;
+            }
+            tab[++index] = `</tr>`;
+        }
+    }
+
+    addInto(oneByType('tbody'), tab.join(' '));
+
+    init_cells();
+
+    built = true;
+}
+
+// ==================================================
+// ==================================================
+// ==================================================
+
+var socket = io();
+
+var valid = true;
+var built = false;
+
+const room = {
+    id: getRoom(),
+    scheme: undefined,
+    name: undefined,
+    state: undefined,
+    user_infos: {
+        id: '',
+        name: '',
+        pic_url: '',
+    },
+};
+
+var id = null;
+
 var messages = document.getElementById('messages');
 var form = document.getElementById('form');
 var input = document.getElementById('input');
@@ -53,17 +147,30 @@ document.addEventListener('DOMContentLoaded', function() {
     socket.emit('connect_room', {
         'room_id': room.id,
     });
-
-    init_cells();
 });
 
 socket.on('connect_room', function(msg) {
-    if(id == null) {
-        id = msg.id;
-        // console.log(msg);
-    }
-    else {
+    if ((!id && !msg.id) || !msg.settings) {
+        // redirection
+        valid = false;
         return false;
+    }
+    if(!id) {
+        id = msg.id;
+    }
+    if(room.scheme == undefined) {
+        room.scheme = msg.settings.scheme;
+    }
+    if(room.name == undefined) {
+        room.name = msg.settings.name;
+    }
+    if(room.id == undefined) {
+        room.id = msg.settings.id;
+    }
+
+    if(!built) {
+        buildInterface();
+        buildTable();
     }
 })
 
