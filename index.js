@@ -96,6 +96,8 @@ const random_token = (type = undefined) => {
 //     },
 // }
 
+// restreindre l'emit à certains
+
 function roomExists(room_id) {
     // check_symfony or rooms_scheme
     // put rooms_scheme in txt files
@@ -104,20 +106,21 @@ function roomExists(room_id) {
 
 io.on('connection', (socket) => {
     io.emit('user_id', socket.id);
+    ////////////////////////////////////
     socket.on('connect_room', (msg) => {
         console.log(msg);
         if(msg.room_id == undefined) {
             console.log('No room specified');
             io.emit('connect_room', {
-                'status': 'error',
-                'message': 'No room specified'
+                status: 'error',
+                message: 'No room specified'
             });
         }
         if(!roomExists(msg.room_id)) {
             console.log('Room does not exist');
             io.emit('connect_room', {
-                'status': 'error',
-                'message': 'Room does not exist'
+                status: 'error',
+                message: 'Room does not exist'
             });
         }
         console.log(`A new user enter the room`);
@@ -135,37 +138,45 @@ io.on('connection', (socket) => {
         }
         io.emit('connect_room', {
             id: id,
+            room_id: msg.room_id,
             ids: list_tokens,
             settings: rooms_scheme[msg.room_id],
             // envoyer état de la room
         });
         // io.emit('connect', rooms[msg.room_id])
     })
+    ////////////////////////////////////
     socket.on('click_cell', (msg) => {
         // verify if clicked
         // change state
         io.emit('click_cell', {
-            'cell': msg.cell_id,
-            'user': msg.user_id,
+            cell: msg.cell_id,
+            user: msg.user_id,
+            room_id: msg.room_id,
         });
     })
+    ////////////////////////////////////
     socket.on('leave_cell', (msg) => {
         // verify if clicked
         // change state
         io.emit('leave_cell', {
-            'cell': msg.cell_id,
-            'user': msg.user_id,
-            'cell_value': msg.cell_value,
+            cell: msg.cell_id,
+            user: msg.user_id,
+            cell_value: msg.cell_value,
+            room_id: msg.room_id,
         });
     })
+    ////////////////////////////////////
     socket.on('chat message', (msg) => {
       io.emit('chat message', msg);
     });
+    ////////////////////////////////////
     socket.on('user_leave', (msg) => {
         console.log(`User ${msg.id} left the room`);
         list_tokens.splice(list_tokens.indexOf(msg.id), 1);
         io.emit('user_leave', {
-            message: `${msg.id} s'est déconnecté`
+            message: `${msg.id} s'est déconnecté`,
+            room_id: msg.room_id,
         });
     });
 });

@@ -36,6 +36,7 @@ function initTrigger(elem) {
             socket.emit('click_cell', {
                 user_id: id,
                 cell_id: event.currentTarget.id,
+                room_id: room.id,
             });
         }
     });
@@ -46,7 +47,8 @@ function initTrigger(elem) {
             socket.emit('leave_cell', {
                 user_id: id,
                 cell_id: event.currentTarget.id,
-                cell_value: byId(event.currentTarget.id).querySelector('input').value
+                cell_value: byId(event.currentTarget.id).querySelector('input').value,
+                room_id: room.id,
             });
         }
     });
@@ -88,7 +90,7 @@ function buildTable() {
     // on build emit get_state
     // for i <th scope="row">i</th>
 
-    fillState(12);
+    fillState();
 }
 
 function fillState(base = null) {
@@ -108,12 +110,19 @@ function fillState(base = null) {
             tab[++index] = `</tr>`;
         }
     }
+    else {
+        
+    }
 
     addInto(oneByType('tbody'), tab.join(' '));
 
     init_cells();
 
     built = true;
+}
+
+function forMyRoom(_id) {
+    return room.id == _id;
 }
 
 // ==================================================
@@ -150,6 +159,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 socket.on('connect_room', function(msg) {
+    if(!forMyRoom(msg.room_id)) {
+        return false;
+    }
     if ((!id && !msg.id) || !msg.settings) {
         // redirection
         valid = false;
@@ -175,10 +187,15 @@ socket.on('connect_room', function(msg) {
 })
 
 socket.on('room_id', function(msg) {
-
+    if(!forMyRoom(msg.room_id)) {
+        return false;
+    }
 });
 
 socket.on('click_cell', function(msg) {
+    if(!forMyRoom(msg.room_id)) {
+        return false;
+    }
     // console.log(msg);
     let cell = byId(msg.cell);
     // console.log(`Mon id est ${id} et le user qui a cliqué est ${msg.user}`);
@@ -202,6 +219,9 @@ socket.on('click_cell', function(msg) {
 });
 
 socket.on('leave_cell', function(msg) {
+    if(!forMyRoom(msg.room_id)) {
+        return false;
+    }
     // console.log(msg);
     let cell = byId(msg.cell);
     // console.log(`Mon id est ${id} et le user qui a leave est ${msg.user}`);
@@ -224,12 +244,16 @@ socket.on('leave_cell', function(msg) {
 });
 
 socket.on('user_leave', function(msg) {
+    if(!forMyRoom(msg.room_id)) {
+        return false;
+    }
     // console.log(msg.message);
     // manage de-click si uear leave
 });
 
 window.onbeforeunload = function(event) {
     socket.emit('user_leave', {
+        room_id: room.id,
         id: id
     });
 }
