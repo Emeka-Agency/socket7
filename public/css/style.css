@@ -1,0 +1,243 @@
+body {
+    background-color:#F4F4F8;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100vh;
+}
+
+header {
+    width: 100%;
+    height: 50px;
+}
+
+main {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/*
+* Drawer
+*/
+main .drawer {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    width: 400px;
+    height: 100%;
+    background-color: #006372;
+    transition: left 0.4s ease-in-out;
+}
+
+/* 
+* drawer active / inactive
+*/
+main .drawer.active {
+    left: 0;
+}
+
+main .drawer.inactive {
+    left: -350px;
+    transition: left 0.4s ease-in-out;
+}
+
+
+
+main .drawer img {
+    position: absolute;
+    right: 5px;
+    top: 15px;
+    transform: translateX(-50%);
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+main .drawer .logo-utils:hover {
+    transform: scale(1.1);
+}
+
+
+
+main .table {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: calc(100% - 50px);
+    height: 100%;
+    transition: right 0.4s ease-in-out;
+}
+
+/*
+* Head table
+*/
+main .head-table {
+    background-color: #009FB7;
+}
+
+main .head-table h2 {
+    margin: 0;
+    padding: 10px;
+    border-top: 1px solid #00282E;
+    border-bottom: 1px solid #00282E;
+    color: #F4F4F8;
+}
+
+/*
+* Main table
+*/
+main .main-table {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+main .main-table .thead {
+    background-color: #E6E6EA;
+}
+
+main .main-table .thead .c-title{
+    border-bottom: 3px solid #ACACAF;
+}
+
+/*
+* Col
+*/
+main .main-table .col {
+    display: flex;
+    flex-direction: row;
+}
+
+/*
+* Row
+*/
+main .main-table .row {
+    display: flex;
+    flex-direction: column;
+}
+
+/*
+* Cell
+*/
+main .main-table .cell {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100px;
+    height: 20px;
+    padding: 5px;
+    border: 1px solid #E6E6EA;
+}
+main .main-table .cell:hover {
+    border: 1px dashed #00282E;
+}
+
+main .main-table .row .c-title {
+    background-color: #E6E6EA;
+}
+
+/*
+* span & input
+*/
+main .main-table span, input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    outline: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*
+* Field active / inactive
+*/
+main .main-table span.inactive, input.inactive {
+    display: none;
+}
+main .main-table input.active, input.active {
+    display: block;
+}
+
+main .main-table .cell.active {
+    background: #F86060;
+    opacity: 0.2;
+}
+
+main .main-table .cell.inactive {
+    border-color: #4AB300;
+}
+
+
+/* 
+* BTN SWITCH => Checkbox
+ */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 45px;
+    height: 24px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }

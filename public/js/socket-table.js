@@ -90,7 +90,7 @@ function buildTable() {
     // on build emit get_state
     // for i <th scope="row">i</th>
 
-    fillState();
+    fillState(20);
 }
 
 function fillState(base = null) {

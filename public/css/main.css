@@ -1,11 +1,17 @@
-div.head {
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #F4F4F8;
+}
 
+div.head {
+    background-color: #009FB7;
 }
 
 div.head .room-name {
     display: inline-block;
     font-size: 32px;
     font-weight: 500;
+    color: #F4F4F8;
 }
 
 div.head .room-id {
@@ -19,10 +25,30 @@ div.head .room-id::before {
     font-size: 32px;
     font-weight: 500;
 }
+/*
+*   Head sheet    
+*/
 
+
+tbody th {
+    width: 80px;
+}
+tbody td {
+    width: 150px;
+}
+
+/*
+*   Column    
+*/
 td {
     position: relative;
+    border: 1px solid #E6E6EA;
+    max-width: 100px;
 }
+
+/*
+*   Field active / inactive    
+*/
 td.active {
     border: 1px solid blue;
     background: #f0f;
@@ -33,6 +59,9 @@ td.inactive {
     background: grey;
 }
 
+/*
+*   Fields    
+*/
 td span,
 td input {
     position: absolute;
