@@ -32,7 +32,6 @@ function initTrigger(elem) {
             window.alert(`Already used by another user`);
         }
         else {
-            // console.log('je prends le focus de la case '+elem.id);
             socket.emit('click_cell', {
                 user_id: id,
                 cell_id: event.currentTarget.id,
@@ -41,9 +40,7 @@ function initTrigger(elem) {
         }
     });
     byId(elem.id).addEventListener('focusout', function(event) {
-        // console.log('Leave cell');
         if(event.currentTarget.classList.contains('active')) {
-            // console.log('je perds le focus de la case '+elem.id);
             socket.emit('leave_cell', {
                 user_id: id,
                 cell_id: event.currentTarget.id,
@@ -55,8 +52,6 @@ function initTrigger(elem) {
 }
 
 function buildInterface() {
-    console.log(room.id);
-    console.log(room.name);
     let index = -1; tab = [];
     tab[++index] = `<div class="head">`;
     if(room.name) {
@@ -71,7 +66,6 @@ function buildInterface() {
 }
 
 function buildTable() {
-    console.log(room.scheme);
     let index = -1; tab = [];
     tab[++index] = `<table class="table">`;
     tab[++index] = `<thead>`;
@@ -94,7 +88,6 @@ function buildTable() {
 }
 
 function fillState(base = null) {
-    console.log(room.state);
     let index = -1; tab = [];
     // base is random number used for tests
     if(base != null) {
@@ -129,6 +122,8 @@ function forMyRoom(_id) {
 // ==================================================
 // ==================================================
 
+var log = true;
+
 var socket = io();
 
 var valid = true;
@@ -144,6 +139,13 @@ const room = {
         name: '',
         pic_url: '',
     },
+    update_user(user) {
+        console.log(user);
+        this.user_infos.id = user.id;
+        this.user_infos.name = user.name;
+        this.user_infos.pic_url = user.pic_url;
+        return this;
+    }
 };
 
 var id = null;
@@ -159,9 +161,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 socket.on('connect_room', function(msg) {
-    if(!forMyRoom(msg.room_id)) {
-        return false;
-    }
+    console.log('connect_room');
+    console.log(msg);
     if ((!id && !msg.id) || !msg.settings) {
         // redirection
         valid = false;
@@ -180,6 +181,10 @@ socket.on('connect_room', function(msg) {
         room.id = msg.settings.id;
     }
 
+    if(msg.me) {
+        room.update_user(msg.me);
+    }
+
     if(!built) {
         buildInterface();
         buildTable();
@@ -187,18 +192,20 @@ socket.on('connect_room', function(msg) {
 })
 
 socket.on('room_id', function(msg) {
+    console.log('room_id');
+    console.log(msg);
     if(!forMyRoom(msg.room_id)) {
         return false;
     }
 });
 
 socket.on('click_cell', function(msg) {
+    console.log('click_cell');
+    console.log(msg);
     if(!forMyRoom(msg.room_id)) {
         return false;
     }
-    // console.log(msg);
     let cell = byId(msg.cell);
-    // console.log(`Mon id est ${id} et le user qui a cliqué est ${msg.user}`);
     if(msg.user == id) {
         // to input
         cell.querySelector('span').classList.remove('active');
@@ -219,12 +226,12 @@ socket.on('click_cell', function(msg) {
 });
 
 socket.on('leave_cell', function(msg) {
+    console.log('leave_cell');
+    console.log(msg);
     if(!forMyRoom(msg.room_id)) {
         return false;
     }
-    // console.log(msg);
     let cell = byId(msg.cell);
-    // console.log(`Mon id est ${id} et le user qui a leave est ${msg.user}`);
     
     cell.querySelector('span').innerHTML = msg.cell_value;
 
@@ -244,16 +251,18 @@ socket.on('leave_cell', function(msg) {
 });
 
 socket.on('user_leave', function(msg) {
+    console.log('user_leave');
+    console.log(msg);
     if(!forMyRoom(msg.room_id)) {
         return false;
     }
-    // console.log(msg.message);
     // manage de-click si uear leave
 });
 
 window.onbeforeunload = function(event) {
+    console.log(room.user_infos);
     socket.emit('user_leave', {
         room_id: room.id,
-        id: id
+        id: room.user_infos.id
     });
 }
