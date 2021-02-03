@@ -1,0 +1,95 @@
+/*
+****** LINE SELECTOR ******
+*/
+main .table .main-table .line-selector {
+    position: relative;
+}
+
+main .table .main-table .line-selector label {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 25%;
+    cursor: pointer;
+    height: 20px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    margin: 0;
+}
+
+main .table .main-table .line-selector label:after {
+    border: 2px solid #fff;
+    border-top: none;
+    border-right: none;
+    content: "";
+    height: 4px;
+    left: 6px;
+    opacity: 0;
+    position: absolute;
+    top: 5px;
+    transform: rotate(-45deg);
+    width: 6px;
+}
+
+main .table .main-table .line-selector input[type="checkbox"] {
+    visibility: hidden;
+}
+
+main .table .main-table .line-selector input[type="checkbox"]:checked + label {
+    background-color: #ddb400;
+    border-color: #ddb400;
+}
+
+main .table .main-table .line-selector input[type="checkbox"]:checked + label:after {
+    opacity: 1;
+}
+
+/*
+****** SHEET SELECTOR ******
+*/
+main .table .main-table .sheet-selector {
+    position: relative;
+}
+
+main .table .main-table .sheet-selector label {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 25%;
+    cursor: pointer;
+    height: 20px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    margin: 0;
+}
+
+main .table .main-table .sheet-selector label:after {
+    border: 2px solid #fff;
+    border-top: none;
+    border-right: none;
+    content: "";
+    height: 4px;
+    left: 6px;
+    opacity: 0;
+    position: absolute;
+    top: 5px;
+    transform: rotate(-45deg);
+    width: 6px;
+}
+
+main .table .main-table .sheet-selector input[type="checkbox"] {
+    visibility: hidden;
+}
+
+main .table .main-table .sheet-selector input[type="checkbox"]:checked + label {
+    background-color: #ddb400;
+    border-color: #ddb400;
+}
+
+main .table .main-table .sheet-selector input[type="checkbox"]:checked + label:after {
+    opacity: 1;
+}

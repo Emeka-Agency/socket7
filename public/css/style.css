@@ -163,30 +163,6 @@ main .drawer img:hover {
 }
 
 /*
-* Nbr line vertically
-*/
-main .table .nbr-line {
-    width: 30px;
-    height: 100%;
-    background-color: #F4F4F8;
-}
-
-main .table .nbr-of-line_start {
-    width: 100%;
-    height: 21px;
-    padding: 5px;
-    /* border: 1px solid #E6E6EA; */
-    border-bottom: 3px solid #ACACAF;
-    cursor: pointer;
-}
-
-main .table .addRow .arrow-down {
-    width: 100%;
-    height: 100%;
-    transform: rotate(180deg);
-}
-
-/*
 * Section Table
 */
 main .table {
@@ -236,11 +212,6 @@ main .head-table h2:hover {
     filter: contrast(2);
     cursor: pointer;
 }
-
-main .head-table h2:hover {
-    color: #ddb400;
-}
-
 
 /*
 * Main table
@@ -303,6 +274,9 @@ main .main-table .cell:hover {
     border: 1px dashed #ddb400;
 }
 
+/*
+*********** column seclector AND col index ***********
+*/
 main .main-table .cell.sheet-selector,
 main .main-table .cell.line-selector,
 main .main-table .cell.tab-line-index,
@@ -317,6 +291,10 @@ main .main-table .cell.line-selector label {
     width: 100%;
     height: 100%;
     cursor: pointer;
+}
+
+main .main-table .line-selector label {
+    border-radius: 50%;
 }
 
 main .main-table .cell.sheet-selector input[type="checkbox"],
