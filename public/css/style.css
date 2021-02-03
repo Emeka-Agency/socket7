@@ -54,12 +54,12 @@ td {
 /*
 *   Field active / inactive    
 */
-td.active {
+div.sheet-cell.active {
     border: 1px solid blue;
     background: #f0f;
 }
 
-td.inactive {
+div.sheet-cell.inactive {
     border: 1px solid pink;
     background: grey;
 }
@@ -67,8 +67,8 @@ td.inactive {
 /*
 *   Fields    
 */
-td span,
-td input {
+div.sheet-cell span,
+div.sheet-cell input {
     position: absolute;
     left: 0;
     top: 0;
@@ -81,12 +81,14 @@ td input {
 }
 
 span.inactive,
-input.inactive {
+input.inactive,
+select.inactive {
     display: none;
 }
 
 span.active,
-input.active {
+input.active,
+select.active {
     display: block;
 }
 
@@ -106,7 +108,7 @@ main {
 }
 
 /*
-* Drawer
+* Section Drawer
 */
 main .drawer {
     position: absolute;
@@ -142,35 +144,46 @@ main .drawer .logo-utils img {
     width: 100%;
     height: 100%;
     cursor: pointer;
-    transform: scale(1);
+    transform: rotate(0deg);
     transition: transform 0.2s ease-in;
 }
 
-main .drawer .logo-utils:hover img {
-    transform: scale(1.25);
-    transition: transform 0.2s ease-out;
+main .drawer img:hover {
+    transform: rotate(180deg);
+    transition: transform 0.2s ease-in;
 }
 
 
-
+/*
+* Section Table
+*/
 main .table {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 50px;
     min-width: calc(100% - 50px);
     height: 100%;
     transition: right 0.4s ease-in-out;
+    overflow-x: auto;
 }
 
 /*
 * Head table
 */
 main .head-table {
+    width: calc(100% - 50px);
     background-color: #009FB7;
     border-top: 1px solid #00282E;
     border-bottom: 1px solid #00282E;
     box-sizing: border-box;
     font-size: 0;
+
+    position: absolute;
+    right: 0;
+    top: 0;
+    min-width: calc(100% - 50px);
+    transition: right 0.4s ease-in-out;
+    overflow-x: auto;
 }
 
 main .head-table h2 {
@@ -188,7 +201,13 @@ main .head-table h2 {
 
 main .head-table h2:hover {
     filter: contrast(2);
+    cursor: pointer;
 }
+
+main .head-table h2:hover {
+    color: #ddb400;
+}
+
 
 /*
 * Main table
@@ -235,10 +254,11 @@ main .main-table .cell {
     height: 20px;
     padding: 5px;
     border: 1px solid #E6E6EA;
+    cursor: pointer;
 }
 
 main .main-table .cell:hover {
-    border: 1px dashed #00282E;
+    border: 1px dashed #ddb400;
 }
 
 main .main-table .row .c-title {
@@ -326,17 +346,17 @@ main .main-table .cell.inactive {
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
-}
-
-input:checked+.slider {
-    background-color: #2196F3;
-}
-
-input:focus+.slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked+.slider:before {
+  }
+  
+  input:checked + .slider {
+    background-color: #ddb400;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #ddb400;
+  }
+  
+  input:checked + .slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);

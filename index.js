@@ -186,6 +186,7 @@ io.on('connection', (socket) => {
     io.emit('user_id', socket.id);
     ////////////////////////////////////
     socket.on('connect_room', (msg) => {
+        console.log('Try to enter the room');
         console.log(msg);
         if(msg.room_id == undefined) {
             console.log('No room specified');
@@ -232,7 +233,7 @@ io.on('connection', (socket) => {
 
         io.to(socket.id).emit('connect_room', {
             id: user.id,
-            settings: rooms_scheme[msg.room_id],
+            settings: scheme_list[msg.room_id],
             state: rooms[msg.room_id].state,
             users: rooms[msg.room_id].users,
             me: user,
@@ -264,6 +265,7 @@ io.on('connection', (socket) => {
     ////////////////////////////////////
     socket.on('user_leave', (msg) => {
         console.log(`User ${msg.id} left the room`);
+        console.log(msg);
         roomExists(msg.room_id) && leaveRoom(msg.id, msg.room_id);
         list_tokens.indexOf(msg.id) > -1 && list_tokens.splice(list_tokens.indexOf(msg.id), 1);
 
