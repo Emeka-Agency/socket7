@@ -141,13 +141,25 @@ main .drawer .logo-utils img {
     width: 100%;
     height: 100%;
     cursor: pointer;
-    transform: rotate(0deg);
     transition: transform 0.2s ease-in;
+    animation: spinImg 10s linear infinite;
+
+}
+/* HOVER LOGO GEAR */
+main .drawer img:hover {
+    animation: spinImg 1s linear infinite;
 }
 
-main .drawer img:hover {
-    transform: rotate(180deg);
-    transition: transform 0.2s ease-in;
+/*
+************ ANIME SPIN GEAR **************
+*/
+@keyframes spinImg {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /*
