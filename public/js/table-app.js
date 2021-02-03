@@ -20,12 +20,32 @@ let app = {
         },
         {
             name: 'Membres',
+            columnTitle: [
+                'id',
+                'prenom',
+                'nom',
+                'disponibilité',
+            ],
+            membres: 10,
         },
         {
             name: 'Attribution Manager',
+            columnTitle: [
+                'id',
+                'candidats',
+                'rôle',
+            ],
+            membres: 10,
         },
         {
             name: 'Paiement',
+            columnTitle: [
+                'id',
+                'candidats',
+                'extra',
+                'remuneration',
+            ],
+            membres: 10,
         },
     ],
 
@@ -137,11 +157,18 @@ let app = {
             const newTitle = document.createElement('h2');
             newTitle.innerText = app.sections[i].name;
             headTable.appendChild(newTitle);
+    
+            // Create row & column :
+            const nbrColumn = app.sections[i].columnTitle.length;
+            for (let i = 0; i < nbrColumn; i++) 
+            {
+                console.log(nbrColumn);
+                const newCell = document.createElement('cell');
+                newCell.classList.add('cell', 'cell-title');
+                newCell.innerText = app.sections[i].columnTitle;
+                console.log(newCell);
+            }
         }
-        console.log(app.sections);
-
-        // Create row & column :
-        console.log(app.sections[0].columnTitle.length);
 
     }
 
