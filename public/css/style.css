@@ -153,6 +153,29 @@ main .drawer img:hover {
     transition: transform 0.2s ease-in;
 }
 
+/*
+* Nbr line vertically
+*/
+main .table .nbr-line {
+    width: 30px;
+    height: 100%;
+    background-color: #F4F4F8;
+}
+
+main .table .nbr-of-line_start {
+    width: 100%;
+    height: 21px;
+    padding: 5px;
+    /* border: 1px solid #E6E6EA; */
+    border-bottom: 3px solid #ACACAF;
+    cursor: pointer;
+}
+
+main .table .addRow .arrow-down {
+    width: 100%;
+    height: 100%;
+    transform: rotate(180deg);
+}
 
 /*
 * Section Table
@@ -160,11 +183,12 @@ main .drawer img:hover {
 main .table {
     position: absolute;
     right: 0;
-    top: 50px;
+    top: 52px;
     min-width: calc(100% - 50px);
     height: 100%;
     transition: right 0.4s ease-in-out;
     overflow-x: auto;
+    display: flex;
 }
 
 /*
