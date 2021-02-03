@@ -145,7 +145,7 @@ main .drawer .logo-utils img {
     animation: spinImg 10s linear infinite;
 
 }
-
+/* HOVER LOGO GEAR */
 main .drawer img:hover {
     animation: spinImg 1s linear infinite;
 }
