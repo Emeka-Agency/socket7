@@ -92,9 +92,6 @@ select.active {
     display: block;
 }
 
-body {
-}
-
 header {
     width: 100%;
     height: 50px;
@@ -340,7 +337,7 @@ main .main-table .cell.inactive {
 
 
 /* 
-* BTN SWITCH => Checkbox
+*  SWITCH => Checkbox
  */
 .switch {
     position: relative;
