@@ -6,8 +6,32 @@ let app = {
     addCol: document.querySelector('.addCol'),
     addRow: document.querySelector('.addRow'),
 
+    sections: [
+        {
+            name: 'Jour à jour',
+            columnTitle: [
+                'id',
+                'candidats',
+                'disponible',
+                'remuneration',
+            ],
+            membres: 10,
+
+        },
+        {
+            name: 'Membres',
+        },
+        {
+            name: 'Attribution Manager',
+        },
+        {
+            name: 'Paiement',
+        },
+    ],
+
     init: () => 
     {
+        app.buildTable();
         // slide section left & right
         app.drawer.addEventListener('click', app.handleOpenDrawerOnClick)
 
@@ -34,6 +58,7 @@ let app = {
         }
     },
 
+    // Add new column
     handleAddColOnClick: (evt) => {
         evt.preventDefault();
 
@@ -56,16 +81,22 @@ let app = {
         })
     },
 
+    // Add new row
     handleAddRowOnClick: (evt) => {
-        // TODO: Finir la fonction!!
         evt.preventDefault();
+
+        // length of total fields
         const cellTitleLenght = document.querySelectorAll('.c-title').length;
         console.log(cellTitleLenght);
 
+        // container parent
         const container = document.querySelector('.main-table');
+
+        // create new row
         const newRow = document.createElement('div');
         newRow.classList.add('row');
 
+        // create a new col for the new row
         const newCol = document.createElement('div');
         newCol.classList.add('col', 'colContent');
 
@@ -75,9 +106,17 @@ let app = {
             const newCell = document.createElement('div');
             newCell.classList.add('cell');
 
-            newCell.innerHTML += 
-            `<input type="text" class="inactive">
-            <span class="active">-</span>`
+            const newInput = document.createElement('input');
+            newInput.classList.add('inactive');
+            newInput.setAttribute('type', 'text');
+            newCell.appendChild(newInput);
+
+            const newSpan = document.createElement('span');
+            newSpan.classList.add('active');
+            newSpan.innerText = '-';
+            newCell.appendChild(newSpan);
+
+            newCol.appendChild(newCell);
 
         }
 
@@ -85,6 +124,26 @@ let app = {
         container.insertBefore(newRow, elementBefore);
 
     },
+
+    buildTable: () => {
+        const headTable = document.querySelector('.head-table');
+        const nbrTable = app.sections.length;
+
+        const thead = document.querySelector('.thead');
+
+        // Create title of table :
+        for (let i = 0; i < nbrTable; i++)
+        {
+            const newTitle = document.createElement('h2');
+            newTitle.innerText = app.sections[i].name;
+            headTable.appendChild(newTitle);
+        }
+        console.log(app.sections);
+
+        // Create row & column :
+        console.log(app.sections[0].columnTitle.length);
+
+    }
 
 
 };

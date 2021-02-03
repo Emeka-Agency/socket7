@@ -20,7 +20,7 @@ main {
 }
 
 /*
-* Drawer
+* Section Drawer
 */
 main .drawer {
     position: absolute;
@@ -56,12 +56,14 @@ main .drawer img {
     cursor: pointer;
 }
 
-main .drawer .logo-utils:hover {
-    transform: scale(1.1);
+main .drawer img:hover {
+    transform: rotate(180deg);
 }
 
 
-
+/*
+* Section Table
+*/
 main .table {
     position: absolute;
     right: 0;
@@ -69,6 +71,7 @@ main .table {
     min-width: calc(100% - 50px);
     height: 100%;
     transition: right 0.4s ease-in-out;
+    overflow-x: auto;
 }
 
 /*
@@ -76,6 +79,7 @@ main .table {
 */
 main .head-table {
     background-color: #009FB7;
+    display: flex;
 }
 
 main .head-table h2 {
@@ -84,7 +88,13 @@ main .head-table h2 {
     border-top: 1px solid #00282E;
     border-bottom: 1px solid #00282E;
     color: #F4F4F8;
+    cursor: pointer;
 }
+
+main .head-table h2:hover {
+    color: #ddb400;
+}
+
 
 /*
 * Main table
@@ -131,9 +141,10 @@ main .main-table .cell {
     height: 20px;
     padding: 5px;
     border: 1px solid #E6E6EA;
+    cursor: pointer;
 }
 main .main-table .cell:hover {
-    border: 1px dashed #00282E;
+    border: 1px dashed #ddb400;
 }
 
 main .main-table .row .c-title {
@@ -220,11 +231,11 @@ main .main-table .cell.inactive {
   }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #ddb400;
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #ddb400;
   }
   
   input:checked + .slider:before {
