@@ -50,8 +50,8 @@ app.get('/', (req, res) => {
 function initSchemes(dir_path) {
     console.log(dir_path);
     fs.readdirSync(dir_path).forEach((file) => {
-        console.log(`${dir_path}\\${file}`);
-        fs.readFileSync(`${dir_path}\\${file}`, (err, data) => {
+        console.log(`${dir_path}/${file}`);
+        fs.readFileSync(`${dir_path}/${file}`, (err, data) => {
             if(err) throw err;
             addScheme(JSON.parse(data));
         });
@@ -89,7 +89,7 @@ var list_tokens = [];
 var scheme_list = {};
 var rooms_scheme = {};
 
-initSchemes(`${__dirname}\\private\\tables\\schemes`);
+initSchemes(`${__dirname}/private/tables/schemes`);
 // console.log(scheme_list);
 
 // {

@@ -220,16 +220,11 @@ const app = {
 
     cellType(params, x, y, value = '---') {
         let index = -1, tab = [];
-        tab[++index] = `
-            <div
-                id="${x}-${y}"
-                class="
-                    cell
-                    ${params.cell_type == 'span/text' ? '' : 'sheet-cell'}
-                    ${params.cell_type == 'input/checkbox' ? 'cell-btn' : ''}
-                "
-            >
-        `;
+        tab[++index] = `<div id="${x}-${y}" class="cell`;
+        if(!params.cell_type == 'span/text') tab[index] += ` sheet-cell`;
+        if(params.cell_type == 'input/checkbox') tab[index] +=  ` for-checkbox`;
+        if(params.cell_type == 'select') tab[index] +=  ` for-select`;
+        tab[index] += `">`;
         switch(params.cell_type) {
             case 'input/text':
                 tab[++index] = `<input class="inactive to-exchange" type="text"/>`;
@@ -238,13 +233,13 @@ const app = {
                 tab[++index] = `<input class="inactive to-exchange" type="date"/>`;
                 break;
             case 'input/checkbox':
-                tab[++index] = `<label class="switch to-exchange">`;
+                tab[++index] = `<label class=" active switch to-exchange">`;
                 tab[++index] = `<input type="checkbox">`;
                 tab[++index] = `<span class="slider round"></span>`;
                 tab[++index] = `</label>`;
                 break;
             case 'select':
-                tab[++index] = `<select class="inactive to-exchange">`;
+                tab[++index] = `<select class="active to-exchange">`;
                 params.options.forEach((option) => {
                     tab[++index] = `<option value="${option.value}">${option.label}</option>`;
                 })
@@ -254,7 +249,16 @@ const app = {
             default:
                 break;
         }
-        tab[++index] = `<span class="active to-exchange">${value}</span>`;
+        if(
+            [
+                'input/checkbox',
+                'select',
+                'span/text'
+            ].indexOf(params.cell_type) == -1
+        ) {
+            tab[++index] = `<span class="active to-exchange">${value}</span>`;
+        }
+
         tab[++index] = `</div>`;
 
         return purgeString(tab.join(' '));

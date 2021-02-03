@@ -76,7 +76,7 @@ div.sheet-cell input {
     height: 100%;
     border: none;
     border-radius: 0;
-    background: white;
+    /* background: white; */
     outline: transparent;
 }
 
@@ -255,6 +255,15 @@ main .main-table .cell {
     padding: 5px;
     border: 1px solid #E6E6EA;
     cursor: pointer;
+}
+
+main .main-table .cell.for-select {
+    
+}
+
+main .main-table .cell.for-select select {
+    padding: 5px;
+    border: none;
 }
 
 main .main-table .cell:hover {
