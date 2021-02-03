@@ -2,7 +2,7 @@ const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const tokenizer = require('rand-token');
-
+const fs = require('fs');
 var faker = require('faker');
 
 app.use(require('express').static(__dirname + '/public'));
@@ -11,61 +11,62 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/tab', (req, res) => {
-    res.sendFile(__dirname + '/tab/index.html');
-});
+// {
+//     room1: {
+//         name: 'Movies',
+//         id: 'room1',
+//         scheme: [
+//             {'label': 'Name', 'cell_type': 'input/text'},
+//             {'label': 'Start date', 'cell_type': 'input/date'},
+//             {'label': 'Stop date', 'cell_type': 'input/date'},
+//         ],
+//     },
+//     room2: {
+//         name: 'Users',
+//         id: 'room2',
+//         scheme: [
+//             {'label': 'Firstname', 'cell_type': 'input/text'},
+//             {'label': 'Lastname', 'cell_type': 'input/text'},
+//             {'label': 'Booked', 'cell_type': 'input/checkbox'},
+//         ],
+//     },
+//     room3: {
+//         name: 'Rights',
+//         id: 'room3',
+//         scheme: [
+//             {'label': 'Permission', 'cell_type': 'span/text'},
+//             {'label': 'ADMIN', 'cell_type': 'input/checkbox'},
+//             {'label': 'MANAGER', 'cell_type': 'input/checkbox'},
+//             {'label': 'PRESS', 'cell_type': 'input/checkbox'},
+//             {'label': 'USER', 'cell_type': 'input/checkbox'},
+//         ],
+//     },
+// }
 
-app.get('/room1', (req, res) => {
-    res.sendFile(__dirname + '/room1/index.html');
-});
+////////////////////////////////
+////////// CORE ////////////////
+////////////////////////////////
 
-app.get('/room2', (req, res) => {
-    res.sendFile(__dirname + '/room2/index.html');
-});
-
-app.get('/room3', (req, res) => {
-    res.sendFile(__dirname + '/room3/index.html');
-});
-
-var rooms = {};
-var list_tokens = [];
-const types = [];
-
-const rooms_scheme = {
-    room1: {
-        name: 'Movies',
-        id: 'room1',
-        scheme: [
-            {'label': 'Name', 'cell_type': 'input/text'},
-            {'label': 'Start date', 'cell_type': 'input/date'},
-            {'label': 'Stop date', 'cell_type': 'input/date'},
-        ],
-    },
-    room2: {
-        name: 'Users',
-        id: 'room2',
-        scheme: [
-            {'label': 'Firstname', 'cell_type': 'input/text'},
-            {'label': 'Lastname', 'cell_type': 'input/text'},
-            {'label': 'Booked', 'cell_type': 'input/checkbox'},
-        ],
-    },
-    room3: {
-        name: 'Rights',
-        id: 'room3',
-        scheme: [
-            {'label': 'Permission', 'cell_type': 'span/text'},
-            {'label': 'ADMIN', 'cell_type': 'input/checkbox'},
-            {'label': 'MANAGER', 'cell_type': 'input/checkbox'},
-            {'label': 'PRESS', 'cell_type': 'input/checkbox'},
-            {'label': 'USER', 'cell_type': 'input/checkbox'},
-        ],
-    },
+function initSchemes(dir_path) {
+    console.log(dir_path);
+    fs.readdirSync(dir_path).forEach((file) => {
+        console.log(`${dir_path}\\${file}`);
+        fs.readFileSync(`${dir_path}\\${file}`, (err, data) => {
+            if(err) throw err;
+            addScheme(JSON.parse(data));
+        });
+    });
 }
 
-const range = 32;
+function addScheme(scheme) {
+    if(!scheme) return false;
+    if(!!scheme.type) return false;
+    console.log(scheme);
+    console.log(scheme_list);
+    scheme_list[scheme.type] = scheme;
+}
 
-const random_token = (type = undefined) => {
+function getRandomToken(type = undefined, range = 32) {
     // type = one of ['jaj_room', 'type_room']
     // change randomBytes according to token type
     let value = tokenizer.uid(range);
@@ -75,13 +76,21 @@ const random_token = (type = undefined) => {
     return value;
 }
 
-const random_user = () => {
+function getRandomUser() {
     return {
         name: faker.name.firstName(),
         id: faker.internet.password(),
         pic_url: '',
     };
 }
+
+var rooms = {};
+var list_tokens = [];
+var scheme_list = {};
+var rooms_scheme = {};
+
+initSchemes(`${__dirname}\\private\\tables\\schemes`);
+// console.log(scheme_list);
 
 // {
 //     id_project_YYMMDD: {
@@ -106,11 +115,13 @@ const random_user = () => {
 //     },
 // }
 
-// restreindre l'emit à certains
-
 function getState(room_id) {
     return {};
 }
+
+////////////////////////////////
+////////// ROOMS ///////////////
+////////////////////////////////
 
 function roomExists(room_id) {
     // check_symfony or rooms_scheme
@@ -167,6 +178,10 @@ function destroyRoom(room_id) {
     rooms[room_id] && delete rooms[room_id];
 }
 
+////////////////////////////////
+////////// SOCKET //////////////
+////////////////////////////////
+
 io.on('connection', (socket) => {
     io.emit('user_id', socket.id);
     ////////////////////////////////////
@@ -191,7 +206,7 @@ io.on('connection', (socket) => {
         let user = {};
         if(msg.user_id == undefined) {
             console.log('Create id');
-            user = random_user();
+            user = getRandomUser();
             console.log(`New user with id ${user.id}`);
             list_tokens.push(user.id);
         }

@@ -1,0 +1,13 @@
+{
+    "name": "Users",
+    "type": "user_params",
+    "scheme": [
+        {"label": "Firstname", "cell_type": "input/text"},
+        {"label": "Lastname", "cell_type": "input/text"},
+        {"label": "Status", "cell_type": "select", "options": [
+            {"label": "ACTIVE", "value": "ACTIVE"},
+            {"label": "INACTIVE", "value": "INACTIVE"}
+        ]}
+    ],
+    "more_columns": false
+}

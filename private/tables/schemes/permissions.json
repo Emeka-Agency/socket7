@@ -1,0 +1,12 @@
+{
+    "name": "Rights",
+    "type": "permissions",
+    "scheme": [
+        {"label": "Permission", "cell_type": "span/text"},
+        {"label": "ADMIN", "cell_type": "input/checkbox"},
+        {"label": "MANAGER", "cell_type": "input/checkbox"},
+        {"label": "PRESS", "cell_type": "input/checkbox"},
+        {"label": "USER", "cell_type": "input/checkbox"}
+    ],
+    "more_columns": false
+}

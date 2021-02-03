@@ -1,10 +1,96 @@
 body {
-    background-color:#F4F4F8;
+    font-family: 'Poppins', sans-serif;
+    background-color: #F4F4F8;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100vh;
+}
+
+div.head {
+    background-color: #009FB7;
+}
+
+div.head .room-name {
+    display: inline-block;
+    font-size: 32px;
+    font-weight: 500;
+    color: #F4F4F8;
+}
+
+div.head .room-id {
+    display: inline-block;
+    font-size: 32px;
+    font-weight: 500;
+}
+
+div.head .room-id::before {
+    content: ' - ';
+    font-size: 32px;
+    font-weight: 500;
+}
+/*
+*   Head sheet    
+*/
+
+
+tbody th {
+    width: 80px;
+}
+tbody td {
+    width: 150px;
+}
+
+/*
+*   Column    
+*/
+td {
+    position: relative;
+    border: 1px solid #E6E6EA;
+    max-width: 100px;
+}
+
+/*
+*   Field active / inactive    
+*/
+td.active {
+    border: 1px solid blue;
+    background: #f0f;
+}
+
+td.inactive {
+    border: 1px solid pink;
+    background: grey;
+}
+
+/*
+*   Fields    
+*/
+td span,
+td input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0;
+    background: white;
+    outline: transparent;
+}
+
+span.inactive,
+input.inactive {
+    display: none;
+}
+
+span.active,
+input.active {
+    display: block;
+}
+
+body {
 }
 
 header {
@@ -44,20 +130,25 @@ main .drawer.inactive {
     transition: left 0.4s ease-in-out;
 }
 
-
-
-main .drawer img {
+main .drawer .logo-utils {
     position: absolute;
-    right: 5px;
-    top: 15px;
-    transform: translateX(-50%);
     width: 25px;
     height: 25px;
-    cursor: pointer;
+    right: 15px;
+    top: 15px;
 }
 
-main .drawer .logo-utils:hover {
-    transform: scale(1.1);
+main .drawer .logo-utils img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    transform: scale(1);
+    transition: transform 0.2s ease-in;
+}
+
+main .drawer .logo-utils:hover img {
+    transform: scale(1.25);
+    transition: transform 0.2s ease-out;
 }
 
 
@@ -76,14 +167,27 @@ main .table {
 */
 main .head-table {
     background-color: #009FB7;
+    border-top: 1px solid #00282E;
+    border-bottom: 1px solid #00282E;
+    box-sizing: border-box;
+    font-size: 0;
 }
 
 main .head-table h2 {
     margin: 0;
     padding: 10px;
-    border-top: 1px solid #00282E;
-    border-bottom: 1px solid #00282E;
+    /* border-left: 1px solid #00282E; */
+    border-right: 1px dashed #00282E;
+    box-sizing: border-box;
     color: #F4F4F8;
+    display: inline-block;
+    position: relative;
+    font-size: 20px;
+    filter: contrast(0.8);
+}
+
+main .head-table h2:hover {
+    filter: contrast(2);
 }
 
 /*
@@ -99,7 +203,7 @@ main .main-table .thead {
     background-color: #E6E6EA;
 }
 
-main .main-table .thead .c-title{
+main .main-table .thead .c-title {
     border-bottom: 3px solid #ACACAF;
 }
 
@@ -132,6 +236,7 @@ main .main-table .cell {
     padding: 5px;
     border: 1px solid #E6E6EA;
 }
+
 main .main-table .cell:hover {
     border: 1px dashed #00282E;
 }
@@ -143,7 +248,8 @@ main .main-table .row .c-title {
 /*
 * span & input
 */
-main .main-table span, input {
+main .main-table span,
+input {
     position: absolute;
     left: 0;
     top: 0;
@@ -160,10 +266,13 @@ main .main-table span, input {
 /*
 * Field active / inactive
 */
-main .main-table span.inactive, input.inactive {
+main .main-table span.inactive,
+input.inactive {
     display: none;
 }
-main .main-table input.active, input.active {
+
+main .main-table input.active,
+input.active {
     display: block;
 }
 
@@ -185,17 +294,17 @@ main .main-table .cell.inactive {
     display: inline-block;
     width: 45px;
     height: 24px;
-  }
-  
-  /* Hide default HTML checkbox */
-  .switch input {
+}
+
+/* Hide default HTML checkbox */
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
-  }
-  
-  /* The slider */
-  .slider {
+}
+
+/* The slider */
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -205,9 +314,9 @@ main .main-table .cell.inactive {
     background-color: #ccc;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  .slider:before {
+}
+
+.slider:before {
     position: absolute;
     content: "";
     height: 16px;
@@ -217,27 +326,27 @@ main .main-table .cell.inactive {
     background-color: white;
     -webkit-transition: .4s;
     transition: .4s;
-  }
-  
-  input:checked + .slider {
+}
+
+input:checked+.slider {
     background-color: #2196F3;
-  }
-  
-  input:focus + .slider {
+}
+
+input:focus+.slider {
     box-shadow: 0 0 1px #2196F3;
-  }
-  
-  input:checked + .slider:before {
+}
+
+input:checked+.slider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
+}
+
+/* Rounded sliders */
+.slider.round {
     border-radius: 34px;
-  }
-  
-  .slider.round:before {
+}
+
+.slider.round:before {
     border-radius: 50%;
-  }
+}

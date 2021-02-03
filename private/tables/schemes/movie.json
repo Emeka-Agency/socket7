@@ -1,0 +1,10 @@
+{
+    "name": "Movies",
+    "type": "movies_list",
+    "scheme": [
+        {"label": "Name", "cell_type": "input/text"},
+        {"label": "Start date", "cell_type": "input/date"},
+        {"label": "Stop date", "cell_type": "input/date"}
+    ],
+    "more_columns": false
+}
