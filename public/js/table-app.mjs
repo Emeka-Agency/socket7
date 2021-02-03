@@ -173,6 +173,11 @@ const app = {
         tab[++index] = `<div class="row">`;
         tab[++index] = `<div class="col thead">`;
         if(scheme) {
+            tab[++index] = `<div class="cell c-title sheet-selector">`;
+            tab[++index] = `<label for="0-0"></label>`;
+            tab[++index] = `<input id="0-0" type="checkbox"/>`;
+            tab[++index] = `</div>`;
+            tab[++index] = `<div class="cell c-title tab-line-indexes">#</div>`;
             scheme.forEach((line) => {
                 console.log(line);
                 tab[++index] = `<div class="cell c-title">${line.label}</div>`;
@@ -197,6 +202,11 @@ const app = {
                 tab[++index] = `<div class="row">`;
                 tab[++index] = `<div class="col colContent">`;
                 if(scheme) {
+                    tab[++index] = `<div class="cell for-select line-selector">`;
+                    tab[++index] = `<input id="${i + 1}-checkbox" type="checkbox"/>`;
+                    tab[++index] = `<label for="${i + 1}-checkbox"></label>`;
+                    tab[++index] = `</div>`;
+                    tab[++index] = `<div id="${i + 1}-${0}" class="cell tab-line-index">${i + 1}</div>`;
                     for(let j = 0; j < scheme.length; j++) {
                         tab[++index] = app.cellType(scheme[j], i + 1, j + 1);
                     }

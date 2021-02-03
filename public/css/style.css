@@ -291,6 +291,29 @@ main .main-table .cell:hover {
     border: 1px dashed #ddb400;
 }
 
+main .main-table .cell.sheet-selector,
+main .main-table .cell.line-selector,
+main .main-table .cell.tab-line-index,
+main .main-table .cell.tab-line-indexes {
+    width: 20px;
+}
+main .main-table .cell.sheet-selector label,
+main .main-table .cell.line-selector label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+main .main-table .cell.sheet-selector input[type="checkbox"],
+main .main-table .cell.line-selector input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+}
+
 main .main-table .row .c-title {
     background-color: #E6E6EA;
 }
