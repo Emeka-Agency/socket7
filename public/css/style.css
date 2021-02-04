@@ -113,7 +113,7 @@ main .drawer {
     top: 0;
     width: 400px;
     height: 100%;
-    background-color: #006372;
+    background-color: #207784;
     transition: left 0.4s ease-in-out;
 }
 
@@ -165,6 +165,10 @@ main .drawer .gear-ctn img:hover {
     }
 }
 
+main .drawer .addcol-arrow, .addrow-arrow {
+    position: relative;
+}
+
 /*
 ============ LOGO ADDCOL ============
 */
@@ -188,6 +192,26 @@ main .drawer .addcol-ctn img {
 main .drawer .addcol-ctn img:hover {
     transform: scale(1.1) rotate(90deg);
     filter: contrast(2);
+}
+
+main .drawer .addcol-ctn img:hover + .tooltipText {
+    visibility: visible;
+}
+
+main .drawer .addcol-ctn .addcol-arrow .tooltipText {
+    position: absolute;
+    visibility: hidden;
+    background-color: #e6e6ea;
+    top: 0;
+    left: 28px;
+    width: 150px;
+    height: 25px;
+    border-radius: 20px;
+    border: 1px solid #ACACAF;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /*
@@ -215,7 +239,6 @@ main .drawer .addrow-ctn img:hover {
     filter: contrast(2);
 }
 
-
 /*
 * Section Table
 */
@@ -229,7 +252,25 @@ main .table {
     overflow-x: auto;
     display: flex;
 }
+main .drawer .addrow-ctn img:hover + .tooltipText {
+    visibility: visible;
+}
 
+main .drawer .addrow-ctn .addrow-arrow .tooltipText {
+    position: absolute;
+    visibility: hidden;
+    background-color: #e6e6ea;
+    top: 0;
+    left: 28px;
+    width: 150px;
+    height: 25px;
+    border-radius: 20px;
+    border: 1px solid #ACACAF;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /*
 * Head table
 */
