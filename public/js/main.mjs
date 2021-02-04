@@ -27,7 +27,7 @@ function purgeString(str) {
 }
 
 function getLocaleRoomId() {
-    return app.schemeType();
+    return app.tableType();
 }
 
 function navigationBar() {
@@ -39,7 +39,7 @@ const socket = io();
 
 document.addEventListener('DOMContentLoaded', function() {
     m_app.init();
-    console.log('Connect to room with id ' + getLocaleRoomId());
+    
     socket.emit('connect_room', {
         'room_id': getLocaleRoomId(),
     });

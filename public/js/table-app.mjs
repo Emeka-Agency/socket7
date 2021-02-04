@@ -19,8 +19,8 @@ const app = {
 
     built: false,
 
-    schemeType() {
-        return app.scheme().type;
+    tableType() {
+        return app.params.type;
     },
 
     params: {
@@ -68,13 +68,17 @@ const app = {
     
         if (app.drawer.classList.contains("active") ) {
             document.querySelector('.drawer').classList.replace("active", "inactive");
-            app.table.style.removeProperty('right');
-            navigationBar().style.removeProperty('right');
+            app.table.style.removeProperty('left');
+            app.table.style.removeProperty('width');
+            navigationBar().style.removeProperty('left');
+            navigationBar().style.removeProperty('width');
         }
         else if (app.drawer.classList.contains('inactive')) {
             document.querySelector('.drawer').classList.replace("inactive", "active");
-            app.table.style.right = "-350px";
-            navigationBar().style.right = "-350px";
+            app.table.style.left = "400px";
+            app.table.style.width = "calc(100% - 400px)";
+            navigationBar().style.left = "400px";
+            navigationBar().style.width = "calc(100% - 400px)";
         }
     },
 
@@ -179,14 +183,13 @@ const app = {
             tab[++index] = `</div>`;
             tab[++index] = `<div class="cell c-title tab-line-indexes">#</div>`;
             scheme.forEach((line) => {
-                console.log(line);
                 tab[++index] = `<div class="cell c-title">${line.label}</div>`;
             });
         }
         tab[++index] = `</div>`;
         tab[++index] = `</div>`;
         tab[++index] = `</div>`;
-    
+
         addInto(oneByType('section.table'), purgeString(tab.join(' ')));
         // on build emit get_state
         // for i <th scope="row">i</th>
@@ -198,6 +201,7 @@ const app = {
         let index = -1, tab = [], scheme = app.scheme();
         // base is random number used for tests
         if(base != null) {
+            // console.log('Fill table with blank lines');
             for(let i = 0; i < base; i++) {
                 tab[++index] = `<div class="row">`;
                 tab[++index] = `<div class="col colContent">`;
@@ -216,7 +220,7 @@ const app = {
             }
         }
         else {
-            
+            // console.log('Fill table with datas');
         }
 
         addInto(oneByType('.main-table'), purgeString(tab.join(' ')));
@@ -231,7 +235,9 @@ const app = {
     cellType(params, x, y, value = '---') {
         let index = -1, tab = [];
         tab[++index] = `<div id="${x}-${y}" class="cell`;
-        if(!params.cell_type == 'span/text') tab[index] += ` sheet-cell`;
+        if(params.cell_type != 'span/text') tab[index] += ` sheet-cell`;
+        if(params.cell_type == 'input/text') tab[index] +=  ` for-text`;
+        if(params.cell_type == 'input/date') tab[index] +=  ` for-date`;
         if(params.cell_type == 'input/checkbox') tab[index] +=  ` for-checkbox`;
         if(params.cell_type == 'select') tab[index] +=  ` for-select`;
         tab[index] += `">`;
@@ -243,8 +249,8 @@ const app = {
                 tab[++index] = `<input class="inactive to-exchange" type="date"/>`;
                 break;
             case 'input/checkbox':
-                tab[++index] = `<label class=" active switch to-exchange">`;
-                tab[++index] = `<input type="checkbox">`;
+                tab[++index] = `<label for="${x}-${y}-checkbox" class="active switch">`;
+                tab[++index] = `<input id="${x}-${y}-checkbox" type="checkbox" class="to-exchange">`;
                 tab[++index] = `<span class="slider round"></span>`;
                 tab[++index] = `</label>`;
                 break;

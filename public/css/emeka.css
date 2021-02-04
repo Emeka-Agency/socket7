@@ -23,6 +23,12 @@ a {
 /* @import './vars.scss'; */
 /* @import './_reset.scss'; */
 
+/* Vars */
+
+:root {
+    --scrollbar-size: 8px;
+}
+
 /* Sizes */
 
 .col-1 {width: calc(100% / 12);}
@@ -319,6 +325,7 @@ select {
 input[type="checkbox"] {
     /* width: 15px; */
     /* height: 15px; */
+    cursor: pointer;
 }
 
 input[type="checkbox"] + label {
@@ -475,7 +482,7 @@ h1, .ts-xxxl {font-size: 32px;}
 .custom-scrollbar {overflow: auto;}
 
 .custom-scrollbar::-webkit-scrollbar {
-    background-color: #ff056688;
+    background-color: #009FB788;
     width: var(--scrollbar-size);
     height: var(--scrollbar-size);
     transition: width 0.3s ease-in-out 0s,
@@ -483,7 +490,7 @@ h1, .ts-xxxl {font-size: 32px;}
 }
 
 .custom-scrollbar::-webkit-scrollbar-button {
-    background-color: #ff056644;
+    background-color: #009FB744;
     width: var(--scrollbar-size);
     height: var(--scrollbar-size);
     transition: width 0.3s ease-in-out 0s,
@@ -496,7 +503,7 @@ h1, .ts-xxxl {font-size: 32px;}
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #ff0566;
+    background-color: #009FB7;
     width: var(--scrollbar-size);
     height: var(--scrollbar-size);
     transition: width 0.3s ease-in-out 0s,

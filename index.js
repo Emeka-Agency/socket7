@@ -48,21 +48,19 @@ app.get('/', (req, res) => {
 ////////////////////////////////
 
 function initSchemes(dir_path) {
-    console.log(dir_path);
+    console.log(`initSchemes with ${dir_path}`);
     fs.readdirSync(dir_path).forEach((file) => {
-        console.log(`${dir_path}/${file}`);
-        fs.readFileSync(`${dir_path}/${file}`, (err, data) => {
-            if(err) throw err;
-            addScheme(JSON.parse(data));
-        });
+        console.log(`initSchemes file : ${dir_path}/${file}`);
+        let data = fs.readFileSync(`${dir_path}/${file}`)
+        addScheme(JSON.parse(data));
     });
 }
 
 function addScheme(scheme) {
+    console.log('addScheme');
     if(!scheme) return false;
-    if(!!scheme.type) return false;
+    if(!scheme.type) return false;
     console.log(scheme);
-    console.log(scheme_list);
     scheme_list[scheme.type] = scheme;
 }
 
@@ -141,11 +139,13 @@ function openRoom(room_id, user) {
 }
 
 function joinRoom(room_id, user, user_socket) {
-    rooms[room_id].users.push({name: user.name, id: user.id, channel: user_socket});
+    roomUsers(room_id).push({name: user.name, id: user.id, channel: user_socket});
 }
 
 function roomUsers(room_id) {
-    console.log(room_id);
+    if(!rooms[room_id]) {
+        return [];
+    }
     return rooms[room_id].users;
 }
 
@@ -163,7 +163,7 @@ function leaveRoom(user_id, room_id) {
  * @return {bool} Return true if room is empty since more than x seconds
  */
 function roomEmpty(room_id, circled = false) {
-    if(circled && rooms[room_id].users.length == 0) {
+    if(circled && roomUsers(room_id).length == 0) {
         return true;
     }
     // else if(!circled) {
@@ -228,14 +228,17 @@ io.on('connection', (socket) => {
         console.log('User entered the room');
 
         socket.to(msg.room_id).emit('connect_room', {
-            users: rooms[msg.room_id].users,
+            users: roomUsers(msg.room_id),
         });
+
+        console.log(msg.room_id);
+        console.log(scheme_list[msg.room_id]);
 
         io.to(socket.id).emit('connect_room', {
             id: user.id,
             settings: scheme_list[msg.room_id],
             state: rooms[msg.room_id].state,
-            users: rooms[msg.room_id].users,
+            users: roomUsers(msg.room_id),
             me: user,
         });
     })
@@ -272,7 +275,7 @@ io.on('connection', (socket) => {
         roomEmpty(msg.room_id) && destroyRoom(msg.room_id);
 
         socket.to(msg.room_id).emit('user_leave', {
-            users: rooms[msg.room_id].users,
+            users: roomUsers(msg.room_id),
         });
 
         io.to(msg.room_id).emit('user_leave', {
