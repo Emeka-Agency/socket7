@@ -129,7 +129,10 @@ main .drawer.inactive {
     transition: left 0.4s ease-in-out;
 }
 
-main .drawer .logo-utils {
+/*
+============ LOGO GEAR ============
+*/
+main .drawer .gear-ctn {
     position: absolute;
     width: 25px;
     height: 25px;
@@ -137,7 +140,7 @@ main .drawer .logo-utils {
     top: 15px;
 }
 
-main .drawer .logo-utils img {
+main .drawer .gear-ctn img {
     width: 100%;
     height: 100%;
     cursor: pointer;
@@ -146,7 +149,7 @@ main .drawer .logo-utils img {
 
 }
 /* HOVER LOGO GEAR */
-main .drawer img:hover {
+main .drawer .gear-ctn img:hover {
     animation: spinImg 1s linear infinite;
 }
 
@@ -161,6 +164,57 @@ main .drawer img:hover {
         transform: rotate(360deg);
     }
 }
+
+/*
+============ LOGO ADDCOL ============
+*/
+main .drawer .addcol-ctn {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 15px;
+    top: 55px;
+    
+}
+
+main .drawer .addcol-ctn img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    filter: contrast(0.8);
+    transform: rotate(90deg);
+}
+
+main .drawer .addcol-ctn img:hover {
+    transform: scale(1.1) rotate(90deg);
+    filter: contrast(2);
+}
+
+/*
+============ LOGO ADDROW ============
+*/
+main .drawer .addrow-ctn {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 15px;
+    top: 88px;
+    
+}
+
+main .drawer .addrow-ctn img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    filter: contrast(0.8);
+    transform: rotate(180deg);
+}
+
+main .drawer .addrow-ctn img:hover {
+    transform: scale(1.1) rotate(180deg);
+    filter: contrast(2);
+}
+
 
 /*
 * Section Table

@@ -11,10 +11,11 @@ const head_menus = [
 const app = {
     
     // GETTER
+    gearSpinner: document.querySelector('.gearSpinner'),
     drawer: document.querySelector('.drawer'),
     table: document.querySelector('.table'),
-    addCol: document.querySelector('.addCol'),
-    addRow: document.querySelector('.addRow'),
+    addCol: document.querySelector('.logo-addCol'),
+    addRow: document.querySelector('.logo-addRow'),
     scheme() {return app.params ? app.params.scheme : null;},
 
     built: false,
@@ -44,7 +45,7 @@ const app = {
         app.buildTable();
 
         // slide section left & right
-        app.drawer.addEventListener('click', app.handleDrawerClick, true);
+        app.gearSpinner.addEventListener('click', app.handleDrawerClick, true);
         // click & add col
         app.addCol.addEventListener('click', app.handleAddColOnClick, true);
         // click & add row
@@ -52,7 +53,7 @@ const app = {
     },
 
     destroy() {
-        app.drawer.removeEventListener('click', app.handleDrawerClick, true);
+        app.gearSpinner.removeEventListener('click', app.handleDrawerClick, true);
         app.addCol.removeEventListener('click', app.handleAddColOnClick, true);
         app.addRow.removeEventListener('click', app.handleAddRowOnClick, true);
     },
@@ -125,15 +126,37 @@ const app = {
             const newCell = document.createElement('div');
             newCell.classList.add('cell');
 
-            const newInput = document.createElement('input');
-            newInput.classList.add('inactive');
-            newInput.setAttribute('type', 'text');
-            newCell.appendChild(newInput);
+            const idCellCheck = document.querySelectorAll('.row').length;
+            // Add cell selector
+            if ( i === 0 ) {
+                newCell.classList.add('for-select');
+                newCell.classList.add('line-selector');
+                const newCheck = document.createElement('input');
+                newCheck.setAttribute('id', `${idCellCheck}-checkbox`);
+                newCheck.setAttribute('type', 'checkbox');
+                newCell.appendChild(newCheck);
 
-            const newSpan = document.createElement('span');
-            newSpan.classList.add('active');
-            newSpan.innerText = '-';
-            newCell.appendChild(newSpan);
+                const newLabel = document.createElement('label');
+                newLabel.setAttribute('for', `${idCellCheck}-checkbox`);
+                newCell.appendChild(newLabel);
+            }
+            // Add cell index
+            else if ( i === 1 ) {
+                newCell.classList.add('tab-line-index');
+                newCell.setAttribute('id', `${idCellCheck}-0`);
+                newCell.innerText = `${idCellCheck}`;
+            }
+            else {
+                const newInput = document.createElement('input');
+                newInput.classList.add('inactive');
+                newInput.setAttribute('type', 'text');
+                newCell.appendChild(newInput);
+    
+                const newSpan = document.createElement('span');
+                newSpan.classList.add('active');
+                newSpan.innerText = '---';
+                newCell.appendChild(newSpan);
+            }
 
             newCol.appendChild(newCell);
 
