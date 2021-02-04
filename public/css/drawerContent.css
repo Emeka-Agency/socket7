@@ -1,0 +1,19 @@
+main .drawer .drawer-content {
+    position: absolute;
+    width: 350px;
+    height: 500px;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+}
+
+main .drawer .drawer-chatroom {
+    position: absolute;
+    width: 350px;
+    height: 300px;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+}

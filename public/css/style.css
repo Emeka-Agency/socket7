@@ -101,7 +101,7 @@ main {
     position: relative;
     display: flex;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 50px);
 }
 
 /*
@@ -224,7 +224,7 @@ main .table {
     right: 0;
     top: 52px;
     min-width: calc(100% - 50px);
-    height: 100%;
+    height: calc(100% - 50px);
     transition: right 0.4s ease-in-out;
     overflow-x: auto;
     display: flex;
@@ -235,6 +235,7 @@ main .table {
 */
 main .head-table {
     width: calc(100% - 50px);
+    height: 50px;
     background-color: #009FB7;
     border-top: 1px solid #00282E;
     border-bottom: 1px solid #00282E;
