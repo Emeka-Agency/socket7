@@ -9,6 +9,7 @@
     <link href="/css/main.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/boxsSelector.css" rel="stylesheet">
+    <link href="/css/drawerContent.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,18 +19,50 @@
     <main>
         <!-- Drawer slider -->
         <section class="drawer inactive">
-            <div class="logo-utils">
-                <img src="assets/images/cran.svg" alt="cran">
+            <!-- Drawer buttons -->
+            <div class="drawer-buttons">
+                <div class="gear-ctn">
+                    <img src="assets/images/cran.svg" alt="cran" class="gearSpinner"/>
+                </div>
+                <div class="addcol-ctn">
+                    <div class="addcol-arrow">
+                        <img src="assets/images/up-arrow.svg" alt="arrow-addcol" class="logo-addCol">
+                        <span class="tooltipText">Ajouter une colonne</span>
+                    </div>
+                </div>
+                <div class="addrow-ctn">
+                    <div class="addrow-arrow">
+                        <img src="assets/images/up-arrow.svg" alt="arrow-addrow" class="logo-addRow">
+                        <span class="tooltipText">Ajouter une ligne</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawer content -->
+            <div class="drawer-content">
+                <h2>Liste des projets en cours :</h2>
+                <ul>
+                    <li>
+                        <a href="#">Projet 1 &rarr;</a>
+                    </li>
+                    <li>
+                        <a href="#">Projet 2 &rarr;</a>
+                    </li>
+                    <li>
+                        <a href="#">Projet 3 &rarr;</a>
+                    </li>
+                    <li>
+                        <a href="#">Projet 4 &rarr;</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="drawer-chatroom">
+                <h2>Chat room</h2>
             </div>
         </section>
 
         <!-- Board navigator -->
         <div class="head-table"></div>
-        
-        <!-- Button add col -->
-        <div class="cell addCol"></div>
-        <!-- Button add row -->
-        <div class="cell addRow"></div>
 
         <!-- Board -->
         <section class="table custom-scrollbar"></section>

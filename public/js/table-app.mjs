@@ -11,10 +11,12 @@ const head_menus = [
 const app = {
     
     // GETTER
+    gearSpinner: document.querySelector('.gearSpinner'),
     drawer: document.querySelector('.drawer'),
     table: document.querySelector('.table'),
-    addCol: document.querySelector('.addCol'),
-    addRow: document.querySelector('.addRow'),
+    addCol: document.querySelector('.logo-addCol'),
+    addRow: document.querySelector('.logo-addRow'),
+    checkRow: null,
     scheme() {return app.params ? app.params.scheme : null;},
 
     built: false,
@@ -43,18 +45,30 @@ const app = {
         app.buildInterface();
         app.buildTable();
 
+        app.checkRow = document.querySelectorAll('.line-selector'),
         // slide section left & right
-        app.drawer.addEventListener('click', app.handleDrawerClick, true);
+        app.gearSpinner.addEventListener('click', app.handleDrawerClick, true);
         // click & add col
         app.addCol.addEventListener('click', app.handleAddColOnClick, true);
         // click & add row
         app.addRow.addEventListener('click', app.handleAddRowOnClick, true);
+        // Builder eventlistener 
+        app.buildAddEventListener();
+        
     },
 
     destroy() {
-        app.drawer.removeEventListener('click', app.handleDrawerClick, true);
+        app.gearSpinner.removeEventListener('click', app.handleDrawerClick, true);
         app.addCol.removeEventListener('click', app.handleAddColOnClick, true);
         app.addRow.removeEventListener('click', app.handleAddRowOnClick, true);
+    },
+
+    // Builder to eventlistener
+    buildAddEventListener() {
+        // Add event on all checkbox
+        app.checkRow.forEach(element => {
+            element.addEventListener('click', app.handleSelectRowOnClick, true);
+        });     
     },
 
     /**
@@ -82,6 +96,25 @@ const app = {
         }
     },
 
+    // Select row on click checkbox
+    handleSelectRowOnClick(evt) {
+        evt.preventDefault();
+        const elementClick = evt.currentTarget.querySelector('input');
+        elementClick.checked ? elementClick.checked = false : elementClick.checked = true;
+       
+        const idCurrentCheck = evt.currentTarget.parentElement.children;
+        
+        [].forEach.call(idCurrentCheck, function(el) {
+            console.log('element check', el);
+            if (el.classList.contains('rowSelected')) {
+                el.classList.remove('rowSelected');
+            }
+            else {
+                el.classList.add('rowSelected');
+            }
+        })
+    },
+
     // Add new column
     handleAddColOnClick(evt) {
         evt.preventDefault();
@@ -104,49 +137,34 @@ const app = {
             </div>`
         })
     },
-    // Add new row
+
+    // Add more row
     handleAddRowOnClick: (evt) => {
-        evt.preventDefault();
-
-        // length of total fields
-        const cellTitleLenght = document.querySelectorAll('.c-title').length;
-        console.log(cellTitleLenght);
-
-        // container parent
-        const container = document.querySelector('.main-table');
-
-        // create new row
-        const newRow = document.createElement('div');
-        newRow.classList.add('row');
-
-        // create a new col for the new row
-        const newCol = document.createElement('div');
-        newCol.classList.add('col', 'colContent');
-
-        newRow.appendChild(newCol);
-
-        for (let i = 0; i < cellTitleLenght; i++) {
-            const newCell = document.createElement('div');
-            newCell.classList.add('cell');
-
-            const newInput = document.createElement('input');
-            newInput.classList.add('inactive');
-            newInput.setAttribute('type', 'text');
-            newCell.appendChild(newInput);
-
-            const newSpan = document.createElement('span');
-            newSpan.classList.add('active');
-            newSpan.innerText = '-';
-            newCell.appendChild(newSpan);
-
-            newCol.appendChild(newCell);
-
+        let index = -1, tab = [], scheme = app.scheme();
+        tab[++index] = `<div class="row">`;
+        tab[++index] = `<div class="col colContent">`;
+        if(scheme) {
+            const idCell = document.querySelectorAll('.row').length;
+            tab[++index] = `<div class="cell for-select line-selector">`;
+            tab[++index] = `<input id="${idCell + 1}-checkbox" type="checkbox"/>`;
+            tab[++index] = `<label for="${idCell + 1}-checkbox"  class="checkrow"></label>`;
+            tab[++index] = `</div>`;
+            tab[++index] = `<div id="${idCell + 1}-${0}" class="cell tab-line-index">${idCell + 1}</div>`;
+            for(let j = 0; j < scheme.length; j++) {
+                tab[++index] = app.cellType(scheme[j], idCell + 1, j + 1);
+            }
         }
+        tab[++index] = `</div>`;
+        tab[++index] = `</div>`;
 
-        const elementBefore = document.querySelector('.addRow');
-        container.insertBefore(newRow, elementBefore);
+        addInto(oneByType('.main-table'), purgeString(tab.join(' ')));
+
+        app.init_cells();
+
+        app.built = true;
 
     },
+
 
     buildNavigation() {
         purgeString(document.querySelector('.head-table').innerHTML = head_menus.map((menu, key) => {
@@ -208,7 +226,7 @@ const app = {
                 if(scheme) {
                     tab[++index] = `<div class="cell for-select line-selector">`;
                     tab[++index] = `<input id="${i + 1}-checkbox" type="checkbox"/>`;
-                    tab[++index] = `<label for="${i + 1}-checkbox"></label>`;
+                    tab[++index] = `<label for="${i + 1}-checkbox" class="checkrow"></label>`;
                     tab[++index] = `</div>`;
                     tab[++index] = `<div id="${i + 1}-${0}" class="cell tab-line-index">${i + 1}</div>`;
                     for(let j = 0; j < scheme.length; j++) {

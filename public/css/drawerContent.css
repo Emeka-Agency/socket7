@@ -1,0 +1,64 @@
+
+main .drawer .drawer-buttons {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 2;
+    width: 50px;
+    height: 100%;
+    background-color: #006372;
+}
+
+/*
+******** DRAWER CONTENT ********
+*/
+main .drawer .drawer-content {
+    position: absolute;
+    width: 335px;
+    height: calc(50% - 45px);
+    top: 30px;
+    left: 15px;
+}
+
+main .drawer .drawer-content ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 50px);
+    padding: 0;
+}
+
+main .drawer .drawer-content h2 {
+    font-size: 22px;
+    color: #fff;
+}
+
+main .drawer .drawer-content li {
+    width: 80%;
+    list-style: none;
+    margin-bottom: 2px;
+
+}
+
+main .drawer .drawer-content a {
+    font-size: 18px;
+    color: #fff;
+    filter: contrast(0.8);
+}
+main .drawer .drawer-content a:hover {
+    font-size: 19px;
+    filter: contrast(2);
+}
+
+/*
+******** DRAWER CHATROOM ********
+*/
+
+main .drawer .drawer-chatroom {
+    position: absolute;
+    width: 335px;
+    height: calc(50% - 45px);
+    bottom: 30px;
+    left: 15px;
+}

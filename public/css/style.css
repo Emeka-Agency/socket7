@@ -113,7 +113,7 @@ main .drawer {
     top: 0;
     width: 400px;
     height: 100%;
-    background-color: #006372;
+    background-color: #207784;
     transition: left 0.4s ease-in-out;
 }
 
@@ -129,7 +129,10 @@ main .drawer.inactive {
     transition: left 0.4s ease-in-out;
 }
 
-main .drawer .logo-utils {
+/*
+============ LOGO GEAR ============
+*/
+main .drawer .gear-ctn {
     position: absolute;
     width: 25px;
     height: 25px;
@@ -137,7 +140,7 @@ main .drawer .logo-utils {
     top: 15px;
 }
 
-main .drawer .logo-utils img {
+main .drawer .gear-ctn img {
     width: 100%;
     height: 100%;
     cursor: pointer;
@@ -146,7 +149,7 @@ main .drawer .logo-utils img {
 
 }
 /* HOVER LOGO GEAR */
-main .drawer img:hover {
+main .drawer .gear-ctn img:hover {
     animation: spinImg 1s linear infinite;
 }
 
@@ -160,6 +163,80 @@ main .drawer img:hover {
     to {
         transform: rotate(360deg);
     }
+}
+
+main .drawer .addcol-arrow, .addrow-arrow {
+    position: relative;
+}
+
+/*
+============ LOGO ADDCOL ============
+*/
+main .drawer .addcol-ctn {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 15px;
+    top: 55px;
+    
+}
+
+main .drawer .addcol-ctn img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    filter: contrast(0.8);
+    transform: rotate(90deg);
+}
+
+main .drawer .addcol-ctn img:hover {
+    transform: scale(1.1) rotate(90deg);
+    filter: contrast(2);
+}
+
+main .drawer .addcol-ctn img:hover + .tooltipText {
+    visibility: visible;
+}
+
+main .drawer .addcol-ctn .addcol-arrow .tooltipText {
+    position: absolute;
+    visibility: hidden;
+    background-color: #e6e6ea;
+    top: 0;
+    left: 28px;
+    width: 150px;
+    height: 25px;
+    border-radius: 20px;
+    border: 1px solid #ACACAF;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*
+============ LOGO ADDROW ============
+*/
+main .drawer .addrow-ctn {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    right: 15px;
+    top: 88px;
+    
+}
+
+main .drawer .addrow-ctn img {
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+    filter: contrast(0.8);
+    transform: rotate(180deg);
+}
+
+main .drawer .addrow-ctn img:hover {
+    transform: scale(1.1) rotate(180deg);
+    filter: contrast(2);
 }
 
 /*
@@ -176,12 +253,31 @@ main .table {
                 width 0.4s ease-in-out;
     display: flex;
 }
+main .drawer .addrow-ctn img:hover + .tooltipText {
+    visibility: visible;
+}
 
+main .drawer .addrow-ctn .addrow-arrow .tooltipText {
+    position: absolute;
+    visibility: hidden;
+    background-color: #e6e6ea;
+    top: 0;
+    left: 28px;
+    width: 150px;
+    height: 25px;
+    border-radius: 20px;
+    border: 1px solid #ACACAF;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /*
 * Head table
 */
 main .head-table {
     width: calc(100% - 50px);
+    height: 50px;
     background-color: #009FB7;
     border-top: 1px solid #00282E;
     border-bottom: 1px solid #00282E;
@@ -353,6 +449,12 @@ main .main-table .cell.inactive {
     border-color: #4AB300;
 }
 
+/*
+************ SELECT ROW ON CLICK ************
+*/
+main .main-table .cell.rowSelected {
+    background-color: #FCF3CF;
+}
 
 /* 
 *  SWITCH => Checkbox
