@@ -402,6 +402,12 @@ main .main-table .cell.inactive {
     border-color: #4AB300;
 }
 
+/*
+************ SELECT ROW ON CLICK ************
+*/
+main .main-table .cell.rowSelected {
+    background-color: #FCF3CF;
+}
 
 /* 
 *  SWITCH => Checkbox
