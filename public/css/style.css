@@ -134,15 +134,18 @@ main .drawer.inactive {
 */
 main .drawer .gear-ctn {
     position: absolute;
-    width: 25px;
-    height: 25px;
-    right: 15px;
-    top: 15px;
+    width: 50px;
+    height: 50px;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 main .drawer .gear-ctn img {
-    width: 100%;
-    height: 100%;
+    width: 25px;
+    height: 25px;
     cursor: pointer;
     transition: transform 0.2s ease-in;
     animation: spinImg 10s linear infinite;
@@ -165,79 +168,33 @@ main .drawer .gear-ctn img:hover {
     }
 }
 
-main .drawer .addcol-arrow, .addrow-arrow {
-    position: relative;
-}
-
 /*
 ============ LOGO ADDCOL ============
 */
-main .drawer .addcol-ctn {
+main .drawer .drawer-buttons .open_modale {
     position: absolute;
-    width: 25px;
-    height: 25px;
-    right: 15px;
-    top: 55px;
-    
-}
-
-main .drawer .addcol-ctn img {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    filter: contrast(0.8);
-    transform: rotate(90deg);
-}
-
-main .drawer .addcol-ctn img:hover {
-    transform: scale(1.1) rotate(90deg);
-    filter: contrast(2);
-}
-
-main .drawer .addcol-ctn img:hover + .tooltipText {
-    visibility: visible;
-}
-
-main .drawer .addcol-ctn .addcol-arrow .tooltipText {
-    position: absolute;
-    visibility: hidden;
-    background-color: #e6e6ea;
-    top: 0;
-    left: 28px;
-    width: 150px;
-    height: 25px;
-    border-radius: 20px;
-    border: 1px solid #ACACAF;
-    font-size: 12px;
+    top: 40px;
+    left: 0;
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
+    filter: contrast(0.8);
 }
 
-/*
-============ LOGO ADDROW ============
-*/
-main .drawer .addrow-ctn {
-    position: absolute;
+main .drawer .drawer-buttons .open_modale img {
     width: 25px;
     height: 25px;
-    right: 15px;
-    top: 88px;
-    
 }
 
-main .drawer .addrow-ctn img {
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    filter: contrast(0.8);
-    transform: rotate(180deg);
-}
-
-main .drawer .addrow-ctn img:hover {
-    transform: scale(1.1) rotate(180deg);
+main .drawer .drawer-buttons .open_modale img:hover {
     filter: contrast(2);
+    transform: scale(1.2);
+    cursor: pointer;
 }
+
+
 
 /*
 * Section Table
@@ -253,25 +210,7 @@ main .table {
                 width 0.4s ease-in-out;
     display: flex;
 }
-main .drawer .addrow-ctn img:hover + .tooltipText {
-    visibility: visible;
-}
 
-main .drawer .addrow-ctn .addrow-arrow .tooltipText {
-    position: absolute;
-    visibility: hidden;
-    background-color: #e6e6ea;
-    top: 0;
-    left: 28px;
-    width: 150px;
-    height: 25px;
-    border-radius: 20px;
-    border: 1px solid #ACACAF;
-    font-size: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 /*
 * Head table
 */
@@ -449,79 +388,3 @@ main .main-table .cell.inactive {
     border-color: #4AB300;
 }
 
-/*
-************ SELECT ROW ON CLICK ************
-*/
-main .main-table .cell.rowSelected {
-    background-color: #FCF3CF;
-}
-
-/* 
-*  SWITCH => Checkbox
- */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* The slider */
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 16px;
-    width: 16px;
-    left: 2px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-  
-  input:checked + .slider {
-    background-color: #ddb400;
-  }
-  
-  input:focus + .slider {
-    box-shadow: 0 0 1px #ddb400;
-  }
-  
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-    border-radius: 34px;
-    width: 45px;
-    height: 24px;
-    margin: 0 auto;
-    cursor: pointer;
-}
-
-.slider.round:before {
-    border-radius: 50%;
-}

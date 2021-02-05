@@ -14,9 +14,9 @@ const app = {
     gearSpinner: document.querySelector('.gearSpinner'),
     drawer: document.querySelector('.drawer'),
     table: document.querySelector('.table'),
-    addCol: document.querySelector('.logo-addCol'),
-    addRow: document.querySelector('.logo-addRow'),
+    openModale: document.querySelector('.open_modale'),
     checkRow: null,
+    checkAllRow: null,
     scheme() {return app.params ? app.params.scheme : null;},
 
     built: false,
@@ -45,13 +45,15 @@ const app = {
         app.buildInterface();
         app.buildTable();
 
+        app.checkAllRow = document.querySelector('.sheet-selector');
+        // checkbox for select one row
         app.checkRow = document.querySelectorAll('.line-selector'),
-        // slide section left & right
-        app.gearSpinner.addEventListener('click', app.handleDrawerClick, true);
-        // click & add col
-        app.addCol.addEventListener('click', app.handleAddColOnClick, true);
-        // click & add row
-        app.addRow.addEventListener('click', app.handleAddRowOnClick, true);
+        // open modale add row & col
+        app.openModale.addEventListener('click', app.handleOpenModal, true);
+        // Add new row
+        // TODO: make event to button
+        // Add new col
+        // TODO: make event to button
         // Builder eventlistener 
         app.buildAddEventListener();
         
@@ -67,8 +69,14 @@ const app = {
     buildAddEventListener() {
         // Add event on all checkbox
         app.checkRow.forEach(element => {
-            element.addEventListener('click', app.handleSelectRowOnClick, true);
-        });     
+            element.addEventListener('click', app.handleSelectOnClick, true);
+        });
+        app.checkAllRow.addEventListener('click', app.handleSelectOnClick, true);  
+    },
+
+    handleOpenModal(evt) {
+        evt.preventDefault();
+        openModale(addcol());
     },
 
     /**
@@ -96,23 +104,62 @@ const app = {
         }
     },
 
-    // Select row on click checkbox
-    handleSelectRowOnClick(evt) {
-        evt.preventDefault();
+    handleSelectOnClick(evt) {
         const elementClick = evt.currentTarget.querySelector('input');
-        elementClick.checked ? elementClick.checked = false : elementClick.checked = true;
-       
-        const idCurrentCheck = evt.currentTarget.parentElement.children;
-        
-        [].forEach.call(idCurrentCheck, function(el) {
-            console.log('element check', el);
-            if (el.classList.contains('rowSelected')) {
-                el.classList.remove('rowSelected');
+        let allCellSelected = null, boxType = null;
+        if (evt.currentTarget.classList.contains('line-selector')) {
+            allCellSelected = evt.currentTarget.parentElement.children;
+            boxType = 'LINE';
+        }
+        else if (evt.currentTarget.classList.contains('sheet-selector')) {
+            allCellSelected = document.querySelectorAll('.cell');
+            boxType = 'SHEET';
+        }
+        app.forSelectCell(allCellSelected, elementClick, boxType);
+    },
+
+    /**
+     * 
+     * @param evt Click event on board
+     * @can Action : Select one or all cellSheet
+     * @can Action : Unselect one or all cellSheet
+     */ 
+    forSelectCell(cellsSelect, elementClick, boxType ) {
+        let boxChecked = app.verifyChecked(elementClick);
+        let boxNotChecked = app.verifyNotChecked(elementClick);
+
+        // What s checkbox clicked ?
+        if (boxType === 'SHEET') {
+            if (elementClick.checked) {
+                app.reverseCheck(elementClick, boxChecked);
             }
-            else {
-                el.classList.add('rowSelected');
+            else if (!elementClick.checked) {
+                app.reverseCheck(elementClick, boxNotChecked);
             }
-        })
+        }
+        else if (boxType === 'LINE') {
+            elementClick.checked ? elementClick.checked = false : elementClick.checked = true;
+        }
+    },
+
+    reverseCheck(elementClick, box ) {
+        elementClick.checked = !elementClick.checked;
+        for (let index = 0; index < box.length; index++) {
+            document.getElementById(box[index].id).checked = elementClick.checked;
+        }
+    },
+
+    // Verify checkbox checked
+    verifyChecked(elementClick) {
+        const allInput = Array.from(document.querySelectorAll('.row .line-selector  input[type="checkbox"]:checked'));
+        allInput.push(elementClick);
+        // console.log('INPUT', allInput);
+        return allInput;
+    },
+
+    verifyNotChecked(currentE) {
+        const allInput = Array.from(document.querySelectorAll('.row .line-selector  input[type="checkbox"]:not(:checked)'));
+        return allInput;
     },
 
     // Add new column
@@ -146,7 +193,7 @@ const app = {
         if(scheme) {
             const idCell = document.querySelectorAll('.row').length;
             tab[++index] = `<div class="cell for-select line-selector">`;
-            tab[++index] = `<input id="${idCell + 1}-checkbox" type="checkbox"/>`;
+            tab[++index] = `<input id="${idCell + 1}-checkbox" type="checkbox" class="all-select"/>`;
             tab[++index] = `<label for="${idCell + 1}-checkbox"  class="checkrow"></label>`;
             tab[++index] = `</div>`;
             tab[++index] = `<div id="${idCell + 1}-${0}" class="cell tab-line-index">${idCell + 1}</div>`;
@@ -196,8 +243,8 @@ const app = {
         tab[++index] = `<div class="col thead">`;
         if(scheme) {
             tab[++index] = `<div class="cell c-title sheet-selector">`;
+            tab[++index] = `<input id="0-0" type="checkbox" class="all-select"/>`;
             tab[++index] = `<label for="0-0"></label>`;
-            tab[++index] = `<input id="0-0" type="checkbox"/>`;
             tab[++index] = `</div>`;
             tab[++index] = `<div class="cell c-title tab-line-indexes">#</div>`;
             scheme.forEach((line) => {
@@ -225,7 +272,7 @@ const app = {
                 tab[++index] = `<div class="col colContent">`;
                 if(scheme) {
                     tab[++index] = `<div class="cell for-select line-selector">`;
-                    tab[++index] = `<input id="${i + 1}-checkbox" type="checkbox"/>`;
+                    tab[++index] = `<input id="${i + 1}-checkbox" type="checkbox" class="all-select"/>`;
                     tab[++index] = `<label for="${i + 1}-checkbox" class="checkrow"></label>`;
                     tab[++index] = `</div>`;
                     tab[++index] = `<div id="${i + 1}-${0}" class="cell tab-line-index">${i + 1}</div>`;
