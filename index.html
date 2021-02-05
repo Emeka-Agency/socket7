@@ -10,6 +10,7 @@
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/boxsSelector.css" rel="stylesheet">
     <link href="/css/drawerContent.css" rel="stylesheet">
+    <link href="/css/modale.css" rel="stylesheet">
 </head>
 
 <body>
@@ -17,27 +18,34 @@
         <div>Casting7 - back-office</div>
     </header>
     <main>
+        <section id="modale">
+            <div id="modale-container">
+                <div id="modale-content"></div>
+            </div>
+        </section>
         <!-- Drawer slider -->
         <section class="drawer inactive">
             <!-- Drawer buttons -->
             <div class="drawer-buttons">
+                <!-- Gear buttons -->
                 <div class="gear-ctn">
                     <img src="assets/images/cran.svg" alt="cran" class="gearSpinner"/>
                 </div>
-                <div class="addcol-ctn">
+                <!-- Add col buttons -->
+                <div class="open_modale">
+                    <img src="assets/images/add.svg" alt="logo-add-fields">
+                </div>
+                <!-- <div class="addcol-ctn">
                     <div class="addcol-arrow">
                         <img src="assets/images/up-arrow.svg" alt="arrow-addcol" class="logo-addCol">
-                        <span class="tooltipText">Ajouter une colonne</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="addrow-ctn">
                     <div class="addrow-arrow">
                         <img src="assets/images/up-arrow.svg" alt="arrow-addrow" class="logo-addRow">
-                        <span class="tooltipText">Ajouter une ligne</span>
                     </div>
                 </div>
             </div>
-
             <!-- Drawer content -->
             <div class="drawer-content">
                 <h2>Liste des projets en cours :</h2>
@@ -73,5 +81,6 @@
     <script type="text/javascript" src="/js/table-app.mjs" type="modale"></script>
     <script type="text/javascript" src="/js/main.mjs" type="modale"></script>
     <script type="text/javascript" src="/js/socket-manage.mjs" type="modale"></script>
+    <script type="text/javascript" src="/js/modale.mjs" type="modale"></script>
 
 </html>

@@ -1,0 +1,151 @@
+/*  ========================================
+    ============ MODALE GLOBAL =============
+    ========================================
+*/  
+
+#modale {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    /* background: rgba(127, 127, 127, 0.5); */
+    opacity: 0;
+}
+
+#modale.opened {
+    z-index: 4;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out 0s;
+}
+
+#modale #modale-container {
+    position: absolute;
+    top: 110px;
+    left: 60px;
+    width: 200px;
+    height: 250px;
+    border-radius: 5px;
+    background-color: #ffffff;
+    margin: 0 auto;
+    box-shadow: black 0px 0px 8px;
+}
+
+#modale #modale-container #modale-content #modale-close {
+    position: absolute;
+    z-index: 1000;
+    right: 15px;
+    top: 15px;
+    font-size: 50px;
+    font-weight: 400;
+    color: black;
+    cursor: pointer;
+    transform: rotate(45deg);
+}
+
+#modale #modale-container #modale-content #modale-close:hover {
+    color: red;
+}
+
+/*
+***********************************************************
+*********************** ADD COL CSS ***********************
+***********************************************************
+*/
+#modale #modale-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center
+}
+
+#modale #modale-content h2{
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    color: black;
+    width: 100%;
+    height: 50px;
+}
+#modale #modale-content form {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    height: 200px;
+
+}
+
+#modale #modale-content form .label-name {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 30px;
+}
+
+#modale #modale-content form .label-select {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 30px;
+}
+
+#modale #modale-content form input {
+    position: absolute;
+    top: 45px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 30px;
+    margin: 0;
+    padding: 0 5px;
+    border-radius: 5px;
+    background-color: #E6E6EA;
+    box-shadow: #ACACAF 0px 0px 5px;
+}
+
+#modale #modale-content form select {
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    border-radius: 5px;
+    border: none;
+    background-color: #E6E6EA;
+    box-shadow: #ACACAF 0px 0px 5px;
+}
+
+#modale #modale-content form button {
+    position: absolute;
+    top: 160px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #E6E6EA;
+    box-shadow: #ACACAF 0px 0px 5px;
+    cursor: pointer;
+}
+
+#modale #modale-content form button:hover {
+    background-color: #ACACAF;
+}
