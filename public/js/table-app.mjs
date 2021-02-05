@@ -19,6 +19,7 @@ const app = {
     checkRow: null,
     scheme() {return app.params ? app.params.scheme : null;},
 
+    navigationBuilt: false,
     built: false,
 
     tableType() {
@@ -27,6 +28,16 @@ const app = {
 
     params: undefined,
 
+    setParams(params) {
+        if(app.params == undefined) {
+            app.params = params;
+            app.init();
+        }
+        else {
+            app.changeTable(params);
+        }
+    },
+
     changeTable(settings) {
         app.params = settings;
         app.destroy();
@@ -34,7 +45,7 @@ const app = {
     },
 
     init() {
-        app.buildNavigation();
+        !app.navigationBuilt && app.buildNavigation();
         if(!app.tableType) {
             return false;
         }
@@ -169,6 +180,8 @@ const app = {
         }).join(' '));
 
         app.initNavigation();
+
+        app.navigationBuilt = true;
     },
 
     buildInterface() {

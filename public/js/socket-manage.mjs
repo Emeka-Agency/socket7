@@ -6,11 +6,18 @@ const initNavigationLink = (elem) => {
     }
     elem.addEventListener('click', function(event) {
         event.preventDefault();
-        socket.emit('change_room', {
-            user: userId(),
-            room_id: roomId(),
-            new_room: elem.dataset.type,
-        });
+        if(userId() != undefined && roomId != undefined) {
+            socket.emit('change_room', {
+                user: getUser(),
+                room_id: roomId(),
+                new_room: elem.dataset.type,
+            });
+        }
+        else {
+            socket.emit('connect_room', {
+                room_id: elem.dataset.type,
+            });
+        }
     })
 }
 
@@ -106,15 +113,22 @@ const room = {
     scheme: undefined,
     name: undefined,
     state: undefined,
+    more_columns: undefined,
     user_infos: {
         id: undefined,
-        name: '',
-        pic_url: '',
+        name: undefined,
+        pic_url: undefined,
     },
-    update_user(user) {
-        this.user_infos.id = user.id;
-        this.user_infos.name = user.name;
-        this.user_infos.pic_url = user.pic_url;
+    updateRoom(params) {
+        this.type = params.type;
+        this.scheme = params.scheme;
+        this.name = params.name;
+        this.more_columns = params.more_columns;
+    },
+    updateUser(user) {
+        this.user_infos.id = this.user_infos.id || user.id;
+        this.user_infos.name = this.user_infos.name || user.name;
+        this.user_infos.pic_url = this.user_infos.pic_url || user.pic_url;
         return this;
     }
 };
@@ -125,6 +139,16 @@ var input = document.getElementById('input');
 
 socket.on('connect_room', function(msg) {
     console.log(msg);
+    if(msg.user) {
+        room.updateUser(msg.user);
+    }
+    if(msg.params) {
+        room.updateRoom(msg.params);
+        m_app.setParams(msg.params);
+    }
+    if(msg.room_id) {
+        room.id = msg.room_id;
+    }
 })
 
 socket.on('user_connection', function(msg) {
