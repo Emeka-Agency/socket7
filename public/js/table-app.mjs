@@ -118,6 +118,7 @@ const app = {
     },
 
     handleSelectOnClick(evt) {
+        console.log("handleSelectOnClick");
         const elementClick = evt.currentTarget.querySelector('input');
         let allCellSelected = null, boxType = null;
         if (evt.currentTarget.classList.contains('line-selector')) {
@@ -277,7 +278,7 @@ const app = {
         // on build emit get_state
         // for i <th scope="row">i</th>
     
-        app.fillState();
+        app.fillState(20);
     },
 
     fillState(base = null) {
