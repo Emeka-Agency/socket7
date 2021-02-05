@@ -82,15 +82,15 @@ const app = {
             document.querySelector('.drawer').classList.replace("active", "inactive");
             app.table.style.removeProperty('left');
             app.table.style.removeProperty('width');
-            navigationBar().style.removeProperty('left');
-            navigationBar().style.removeProperty('width');
+            getNavigationBar().style.removeProperty('left');
+            getNavigationBar().style.removeProperty('width');
         }
         else if (app.drawer.classList.contains('inactive')) {
             document.querySelector('.drawer').classList.replace("inactive", "active");
             app.table.style.left = "400px";
             app.table.style.width = "calc(100% - 400px)";
-            navigationBar().style.left = "400px";
-            navigationBar().style.width = "calc(100% - 400px)";
+            getNavigationBar().style.left = "400px";
+            getNavigationBar().style.width = "calc(100% - 400px)";
         }
     },
 
@@ -296,10 +296,10 @@ const app = {
     },
 
     initNavigation() {
-        [].forEach.call(document.querySelectorAll('.head-link-type'), initHeadLink);
+        [].forEach.call(document.querySelectorAll('.head-link-type'), initNavigationLink);
     },
 
     init_cells() {
-        [].forEach.call(document.querySelectorAll('.sheet-cell'), initTrigger);
+        [].forEach.call(document.querySelectorAll('.sheet-cell'), initCellTriggers);
     }
 };

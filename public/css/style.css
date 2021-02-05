@@ -59,7 +59,7 @@ div.sheet-cell.active {
     background: #f0f;
 }
 
-div.sheet-cell.inactive {
+div.sheet-cell.used {
     border: 1px solid pink;
     background: grey;
 }
@@ -80,9 +80,9 @@ div.sheet-cell input {
     outline: transparent;
 }
 
-span.inactive,
-input.inactive,
-select.inactive {
+span.used,
+input.used,
+select.used {
     display: none;
 }
 
@@ -430,8 +430,8 @@ input {
 /*
 * Field active / inactive
 */
-main .main-table span.inactive,
-input.inactive {
+main .main-table span.used,
+input.used {
     display: none;
 }
 
@@ -445,7 +445,7 @@ main .main-table .cell.active {
     opacity: 0.2;
 }
 
-main .main-table .cell.inactive {
+main .main-table .cell.used {
     border-color: #4AB300;
 }
 

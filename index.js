@@ -31,8 +31,6 @@ function addScheme(scheme) {
 }
 
 function getRandomToken(type = undefined, range = 32) {
-    // type = one of ['jaj_room', 'type_room']
-    // change randomBytes according to token type
     let value = tokenizer.uid(range);
     while(list_tokens.indexOf(value) > -1) {
         value = tokenizer.uid(range);
@@ -40,21 +38,15 @@ function getRandomToken(type = undefined, range = 32) {
     return value;
 }
 
-function getRandomUser() {
-    return {
-        name: faker.name.firstName(),
-        id: faker.internet.password(),
-        pic_url: '',
-    };
+function getScheme(room_id) {
+    return scheme_list[room_id];
 }
 
 var rooms = {};
 var list_tokens = [];
 var scheme_list = {};
-var rooms_scheme = {};
 
 initSchemes(`${__dirname}/private/tables/schemes`);
-// console.log(scheme_list);
 
 // {
 //     id_project_YYMMDD: {
@@ -71,17 +63,13 @@ initSchemes(`${__dirname}/private/tables/schemes`);
 //              'c-3': {'used': true, 'user': 'token'},
 //          }
 //         'users': {
-//             'id_user': {
+//             'id': {
 //                 'name': '',
-//                 'token': '',
+//                 'pic_url': '',
 //             }
 //         },
 //     },
 // }
-
-function getState(room_id) {
-    return {};
-}
 
 ////////////////////////////////
 ////////// ROOMS ///////////////
@@ -90,65 +78,97 @@ function getState(room_id) {
 function roomExists(room_id) {
     // check_symfony or rooms_scheme
     // put rooms_scheme in txt files
-    return true;
+    return getScheme(room_id) != undefined;
 }
 
 function roomOpened(room_id) {
-    return rooms[room_id];
+    return rooms[room_id] != undefined;
 }
 
 function openRoom(room_id, user) {
-    rooms[room_id] = {
-        'state': getState(room_id),
-        'users': [],
+    if(roomExists(room_id) && !roomOpened(room_id)) {
+        rooms[room_id] = {
+            scheme: getScheme(room_id),
+            state: {},
+            users: {
+                [user.id]: {
+                    name: user.name,
+                    pic_url: user.pic_url,
+                }
+            },
+        }
+        return true;
     }
-}
-
-function joinRoom(room_id, user, user_socket) {
-    roomUsers(room_id).push({name: user.name, id: user.id, channel: user_socket});
+    return false;
 }
 
 function roomUsers(room_id) {
-    if(!rooms[room_id]) {
-        return [];
+    if(roomExists(room_id) && roomOpened(room_id)) {
+        return rooms[room_id].users;
     }
-    return rooms[room_id].users;
+    return {};
 }
 
 function roomState(room_id) {
-    if(!rooms[room_id]) {
-        return {};
+    if(roomExists(room_id) && roomOpened(room_id)) {
+        return rooms[room_id].state;
     }
-    return rooms[room_id].state;
+    return {};
 }
 
-function leaveRoom(user_id, room_id) {
-    roomUsers(room_id).splice(
-        roomUsers(room_id).findIndex(elem => elem.id === user_id),
-        1
-    );
-}
-
-/**
- * @param {string} room_id Room name
- * @param {bool} circled If room is empty since x seconds
- * 
- * @return {bool} Return true if room is empty since more than x seconds
- */
-function roomEmpty(room_id, circled = false) {
-    if(circled && roomUsers(room_id).length == 0) {
-        return true;
+function roomEmpty(room_id) {
+    if(roomExists(room_id) && roomOpened(room_id)) {
+        return roomUsers(room_id).length == 0;
     }
-    // else if(!circled) {
-    //     setTimeout(roomEmpty(room_id, true), 5 * 60 * 1000);
-    // }
-    else {
-        false;
-    }
+    return -1;
 }
 
 function destroyRoom(room_id) {
-    rooms[room_id] && delete rooms[room_id];
+    if(roomExists(room_id) && roomOpened(room_id)) {
+        if(!roomEmpty(room_id)) {
+            // empty the room
+        }
+        delete rooms[room_id];
+    }
+    return -1;
+}
+
+////////////////////////////////
+////////// USERS ///////////////
+////////////////////////////////
+
+function createUser() {
+    return {
+        name: faker.name.firstName(),
+        id: faker.internet.password(),
+        pic_url: faker.image.avatar(),
+    };
+}
+
+function addUserInRoom(user_id, room_id) {
+    if(roomExists(room_id) && !roomOpened(room_id)) {
+        openRoom(room_id);
+    }
+    if(roomExists(room_id) && roomOpened(room_id) && userExists(user_id) && !userInRoom(user_id, room_id)) {
+        rooms[room_id].users[user_id];
+        return true;
+    }
+    return false;
+}
+function removeUserFromRoom(user_id, room_id) {
+    if(roomExists(room_id) && roomOpened(room_id) && userExists(user_id) && userInRoom(user_id, room_id)) {
+        delete rooms[room_id].users[user_id];
+    }
+}
+
+function userExists(user_id) {
+    return list_tokens.indexOf(user_id) > -1;
+}
+function userInRoom(user_id, room_id) {
+    if(userExists(user_id) && roomExists(room_id) && roomOpened(room_id)) {
+        return rooms[room_id].users[user_id] != undefined;
+    }
+    return false;
 }
 
 ////////////////////////////////
@@ -156,180 +176,74 @@ function destroyRoom(room_id) {
 ////////////////////////////////
 
 io.on('connection', (socket) => {
-    io.emit('user_id', socket.id);
     ////////////////////////////////////
-    socket.on('connect_room', (msg) => {
-        console.log('Try to enter the room');
+    socket.on('connect_user', (msg) => {
         console.log(msg);
-        if(msg.room_id == undefined) {
-            console.log('No room specified');
-            io.to(socket.id).emit('connect_room', {
-                status: 'error',
-                message: 'No room specified'
-            });
-        }
-        if(!roomExists(msg.room_id)) {
-            console.log('Room does not exist');
-            io.to(socket.id).emit('connect_room', {
-                status: 'error',
-                message: 'Room does not exist'
-            });
-        }
-        
-        console.log(`A new user try to access a room`);
-        let user = {};
-        if(msg.user_id == undefined) {
-            console.log('Create id');
-            user = getRandomUser();
-            console.log(`New user with id ${user.id}`);
-            list_tokens.push(user.id);
-        }
-        else {
-            console.log(`User with id ${msg.user_id}`);
-            user.id = msg.user_id;
-            user.name = msg.user_name;
-            list_tokens.push(msg.user_id);
-        }
-
-        if(!roomOpened(msg.room_id)) {
-            console.log('Room is not yet open. Opening');
-            openRoom(msg.room_id, user);
-        }
-        joinRoom(msg.room_id, user, socket.id);
-        socket.join(msg.room_id);
-
-        console.log('User entered the room');
-
-        socket.to(msg.room_id).emit('connect_room', {
-            users: roomUsers(msg.room_id),
-        });
-
-        io.to(socket.id).emit('connect_room', {
-            id: user.id,
-            settings: scheme_list[msg.room_id],
-            state: roomState(msg.room_id),
-            users: roomUsers(msg.room_id),
-            me: user,
-            rooms: rooms,
-        });
-    })
-    ////////////////////////////////////
-    socket.on('click_cell', (msg) => {
-        // verify if clicked
-        // change state
-        io.to(msg.room_id).emit('click_cell', {
-            cell: msg.cell_id,
-            user: msg.user_id,
-        });
-    })
-    ////////////////////////////////////
-    socket.on('leave_cell', (msg) => {
-        // verify if clicked
-        // change state
-        io.to(msg.room_id).emit('leave_cell', {
-            cell: msg.cell_id,
-            user: msg.user_id,
-            cell_value: msg.cell_value,
-        });
-    })
-    ////////////////////////////////////
-    socket.on('chat message', (msg) => {
-      io.emit('chat message', msg);
     });
     ////////////////////////////////////
-    socket.on('user_leave', (msg) => {
-        console.log(`User ${msg.user_id} left the room`);
+    socket.on('connect_room', (msg) => {
         console.log(msg);
-        roomExists(msg.room_id) && leaveRoom(msg.user_id, msg.room_id);
-        list_tokens.indexOf(msg.user_id) > -1 && list_tokens.splice(list_tokens.indexOf(msg.user_id), 1);
-        
-        roomEmpty(msg.room_id) && destroyRoom(msg.room_id);
-        
-        socket.to(msg.room_id).emit('user_leave', {
-            users: roomUsers(msg.room_id),
-        });
-        
-        if(msg.user_id != undefined) {
-            io.to(msg.room_id).emit('user_leave', {
-                message: `${msg.user_id} s'est déconnecté`,
+        if(msg.room_id == undefined) {
+            io.to(socket.id).emit('connect_room', {
+                status: 'error',
+                message: 'No room id provided',
             });
+            return false;
         }
+        if(!roomExists(msg.room_id)) {
+            io.to(socket.id).emit('connect_room', {
+                status: 'error',
+                message: 'Room does not exist',
+            });
+            return false;
+        }
+        let user = null;
+        if(msg.user_id == undefined) {
+            user = createUser();
+        }
+        else {
+            user = {
+                name: msg.user.name,
+                id: msg.user.id,
+                pic_url: msg.user.pic_url,
+            }
+        }
+        list_tokens.push(user.id);
+
+        addUserInRoom(user.id, msg.room_id);
+
+        socket.to(msg.room_id).emit('user_connection', {
+            users: roomUsers(msg.room_id),
+        })
+
+        io.to(socket.id).emit('connect_room', {
+            user: user,
+            room_id: msg.room_id,
+        })
     });
     ////////////////////////////////////
     socket.on('change_room', (msg) => {
-        console.log('Try to change room');
         console.log(msg);
-        if(msg.new_room_id == undefined) {
-            console.log('No room specified');
-            io.to(socket.id).emit('connect_room', {
-                status: 'error',
-                message: 'No room specified'
-            });
-        }
-        if(!roomExists(msg.new_room_id)) {
-            console.log('Room does not exist');
-            io.to(socket.id).emit('connect_room', {
-                status: 'error',
-                message: 'Room does not exist'
-            });
-        }
-
-        roomExists(msg.room_id) && leaveRoom(msg.user_id, msg.room_id);
-        list_tokens.indexOf(msg.user_id) > -1 && list_tokens.splice(list_tokens.indexOf(msg.user_id), 1);
-        
-        roomEmpty(msg.room_id) && destroyRoom(msg.room_id);
-        
-        console.log(`A new user try to access a room`);
-        let user = {};
-        if(msg.user_id == undefined) {
-            console.log('Create id');
-            user = getRandomUser();
-            console.log(`New user with id ${user.id}`);
-            list_tokens.push(user.id);
-        }
-        else {
-            console.log(`User with id ${msg.user_id}`);
-            leaveRoom(msg.user_id, msg.room_id)
-            user.id = msg.user_id;
-            user.name = msg.user_name;
-            list_tokens.push(msg.user_id);
-        }
-
-        if(!roomOpened(msg.new_room_id)) {
-            console.log('Room is not yet open. Opening');
-            openRoom(msg.new_room_id, user);
-        }
-        joinRoom(msg.new_room_id, user, socket.id);
-        socket.join(msg.new_room_id);
-
-        console.log('User entered the room');
-
-        socket.to(msg.new_room_id).emit('connect_room', {
-            users: roomUsers(msg.new_room_id),
-        });
-        
-        if(msg.user_id != undefined) {
-            io.to(msg.room_id).emit('user_leave', {
-                message: `${msg.user_id} s'est déconnecté`,
-            });
-        }
-
-        socket.to(msg.room_id).emit('connect_room', {
-            users: roomUsers(msg.room_id),
-        });
-
-        io.to(socket.id).emit('connect_room', {
-            id: user.id,
-            settings: scheme_list[msg.room_id],
-            state: roomState(msg.room_id),
-            users: roomUsers(msg.room_id),
-            me: user,
-            rooms: rooms,
-        });
-
-        io.to(msg.room_id).emit('change_room', {
-
-        })
+    });
+    ////////////////////////////////////
+    socket.on('leave_room', (msg) => {
+        console.log(msg);
+    });
+    ////////////////////////////////////
+    socket.on('click_cell', (msg) => {
+        console.log(msg);
+    });
+    ////////////////////////////////////
+    socket.on('change_cell', (msg) => {
+        console.log(msg);
+    });
+    ////////////////////////////////////
+    socket.on('leave_cell', (msg) => {
+        console.log(msg);
+    });
+    ////////////////////////////////////
+    socket.on('chat_message', (msg) => {
+        console.log(msg);
     });
 });
 
