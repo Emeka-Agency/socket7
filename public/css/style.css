@@ -82,7 +82,10 @@ div.sheet-cell input {
 
 span.used,
 input.used,
-select.used {
+select.used,
+span.inactive,
+input.inactive,
+select.inactive {
     display: none;
 }
 

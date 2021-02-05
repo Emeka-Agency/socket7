@@ -25,9 +25,10 @@ const initCellTriggers = (elem = null) => {
     if(!elem) {
         return false;
     }
+    console.log(elem.id);
     if(cellIsSelect(elem)) {
         byId(elem.id).addEventListener('change', function(event) {
-            event.preventDefault();
+            // event.preventDefault();
             if(cellIsUsed(elem)) {
                 console.log('Elem is already used by another user.')
                 return false;
@@ -40,9 +41,9 @@ const initCellTriggers = (elem = null) => {
             })
         });
     }
-    if(cellIsText(elem) || cellIsDate(elem) || cellIsCheckbox(elem)) {
+    else if(cellIsText(elem) || cellIsDate(elem) || cellIsCheckbox(elem)) {
         byId(elem.id).addEventListener('click', function(event) {
-            event.preventDefault();
+            // event.preventDefault();
             if(cellIsUsed(elem)) {
                 console.log('Elem is already used by another user.')
                 return false;
@@ -54,9 +55,9 @@ const initCellTriggers = (elem = null) => {
             })
         });
     }
-    if(cellIsText(elem) || cellIsDate(elem)) {
+    else if(cellIsText(elem) || cellIsDate(elem)) {
         byId(elem.id).addEventListener('focusout', function(event) {
-            event.preventDefault();
+            // event.preventDefault();
             if(cellIsUsed(elem)) {
                 console.log('Elem is already used by another user.')
                 return false;
@@ -68,6 +69,9 @@ const initCellTriggers = (elem = null) => {
                 value: getCellValue(elem),
             });
         });
+    }
+    else {
+        return false;
     }
 }
 

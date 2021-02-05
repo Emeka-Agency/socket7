@@ -140,10 +140,12 @@ const app = {
         // // Add another field for this col
         [].forEach.call(document.querySelectorAll('.colContent'), function(el) {
             el.innerHTML += 
-            `<div class="cell">
+            `<div id="${el.querySelector('.tab-line-index').innerText}-${el.childElementCount - 1}" class="cell">
                 <input type="number" class="inactive">
-                <span class="active">-</span>
-            </div>`
+                <span class="active">---</span>
+            </div>`;
+
+            initCellTriggers(document.getElementById(`${el.querySelector('.tab-line-index').innerText}-${el.childElementCount - 2}`));
         });
     },
 
@@ -153,8 +155,8 @@ const app = {
         tab[++index] = `<div class="row">`;
         tab[++index] = `<div class="col colContent">`;
         if(scheme) {
-            const idCell = document.querySelectorAll('.row').length;
-            tab[++index] = `<div class="cell for-select line-selector">`;
+            const idCell = document.querySelectorAll('.row').length - 1;
+            tab[++index] = `<div class="cell for-checkbox line-selector">`;
             tab[++index] = `<input id="${idCell + 1}-checkbox" type="checkbox"/>`;
             tab[++index] = `<label for="${idCell + 1}-checkbox"  class="checkrow"></label>`;
             tab[++index] = `</div>`;
@@ -234,7 +236,7 @@ const app = {
                 tab[++index] = `<div class="row">`;
                 tab[++index] = `<div class="col colContent">`;
                 if(scheme) {
-                    tab[++index] = `<div class="cell for-select line-selector">`;
+                    tab[++index] = `<div class="cell for-checkbox line-selector">`;
                     tab[++index] = `<input id="${i + 1}-checkbox" type="checkbox"/>`;
                     tab[++index] = `<label for="${i + 1}-checkbox" class="checkrow"></label>`;
                     tab[++index] = `</div>`;
