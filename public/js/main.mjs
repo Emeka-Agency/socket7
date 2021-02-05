@@ -18,7 +18,7 @@ function addInto(parent, content) {
     parent.innerHTML += content;
 }
 
-function insertInto(parent, content) {
+function replaceInto(parent, content) {
     parent.innerHTML = content;
 }
 
@@ -41,6 +41,6 @@ document.addEventListener('DOMContentLoaded', function() {
     m_app.init();
     
     socket.emit('connect_room', {
-        'room_id': getLocaleRoomId(),
+        room_id: getLocaleRoomId(),
     });
 })

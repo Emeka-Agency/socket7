@@ -3,7 +3,7 @@ const head_menus = [
     // {'label': 'Booking manager', 'type': 'bookman'},
     // {'label': 'Validation manager', 'type': 'valiman'},
     // {'label': 'Confirmation manager', 'type': 'confman'},
-    {'label': 'Movies', 'type': 'movie'},
+    {'label': 'Movies', 'type': 'movies_list'},
     {'label': 'Users', 'type': 'user_params'},
     {'label': 'Permissions', 'type': 'permissions'},
 ];
@@ -22,26 +22,22 @@ const app = {
     built: false,
 
     tableType() {
-        return app.params.type;
+        return app.params ? app.params.type : null;
     },
 
-    params: {
-        "name": "Users",
-        "type": "user_params",
-        "scheme": [
-            {"label": "Firstname", "cell_type": "input/text"},
-            {"label": "Lastname", "cell_type": "input/text"},
-            {"label": "Status", "cell_type": "select", "options": [
-                {"label": "ACTIVE", "value": "ACTIVE"},
-                {"label": "INACTIVE", "value": "INACTIVE"}
-            ]},
-            {"label": "IS_ADMIN", "cell_type": "input/checkbox"},
-        ],
-        "more_columns": false
+    params: undefined,
+
+    changeTable(settings) {
+        app.params = settings;
+        app.destroy();
+        app.init();
     },
 
     init() {
         app.buildNavigation();
+        if(!app.tableType) {
+            return false;
+        }
         app.buildInterface();
         app.buildTable();
 
@@ -54,13 +50,15 @@ const app = {
         app.addRow.addEventListener('click', app.handleAddRowOnClick, true);
         // Builder eventlistener 
         app.buildAddEventListener();
-        
     },
 
     destroy() {
         app.gearSpinner.removeEventListener('click', app.handleDrawerClick, true);
         app.addCol.removeEventListener('click', app.handleAddColOnClick, true);
         app.addRow.removeEventListener('click', app.handleAddRowOnClick, true);
+        app.checkRow.forEach(element => {
+            element.removeEventListener('click', app.handleSelectRowOnClick, true);
+        });
     },
 
     // Builder to eventlistener
@@ -68,7 +66,7 @@ const app = {
         // Add event on all checkbox
         app.checkRow.forEach(element => {
             element.addEventListener('click', app.handleSelectRowOnClick, true);
-        });     
+        });
     },
 
     /**
@@ -112,7 +110,7 @@ const app = {
             else {
                 el.classList.add('rowSelected');
             }
-        })
+        });
     },
 
     // Add new column
@@ -135,7 +133,7 @@ const app = {
                 <input type="number" class="inactive">
                 <span class="active">-</span>
             </div>`
-        })
+        });
     },
 
     // Add more row
@@ -162,13 +160,12 @@ const app = {
         app.init_cells();
 
         app.built = true;
-
     },
 
 
     buildNavigation() {
         purgeString(document.querySelector('.head-table').innerHTML = head_menus.map((menu, key) => {
-            return `<h2>${menu.label}<a class="absolute-link head-link-type" href="${menu.type}"></a></h2>`
+            return `<h2>${menu.label}<a class="absolute-link head-link-type" data-type="${menu.type}"></a></h2>`
         }).join(' '));
 
         app.initNavigation();
@@ -208,11 +205,11 @@ const app = {
         tab[++index] = `</div>`;
         tab[++index] = `</div>`;
 
-        addInto(oneByType('section.table'), purgeString(tab.join(' ')));
+        replaceInto(oneByType('section.table'), purgeString(tab.join(' ')));
         // on build emit get_state
         // for i <th scope="row">i</th>
     
-        app.fillState(20);
+        app.fillState();
     },
 
     fillState(base = null) {

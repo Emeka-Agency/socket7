@@ -7,7 +7,8 @@
         {"label": "Status", "cell_type": "select", "options": [
             {"label": "ACTIVE", "value": "ACTIVE"},
             {"label": "INACTIVE", "value": "INACTIVE"}
-        ]}
+        ]},
+        {"label": "IS_ADMIN", "cell_type": "input/checkbox"}
     ],
     "more_columns": false
 }

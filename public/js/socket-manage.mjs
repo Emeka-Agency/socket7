@@ -1,6 +1,21 @@
+// mettre user en sessionStorage pour le retrouver sur un même tab et avoir plusieurs users
+
 const initHeadLink = (elem) => {
     elem.addEventListener('click', function(e) {
         e.preventDefault();
+        console.log(room.scheme);
+        if(room.scheme != undefined) {
+            socket.emit('change_room', {
+                room_id: getLocaleRoomId(),
+                user_id: room.user_infos.id,
+                new_room_id: e.currentTarget.dataset.type,
+            });
+        }
+        else {
+            socket.emit('connect_room', {
+                room_id: e.currentTarget.dataset.type,
+            });
+        }
     });
 }
 
@@ -119,21 +134,9 @@ var log = true;
 var valid = true;
 
 const room = {
-    // id: getRoom(),
-    scheme: {
-        "name": "Users",
-        "type": "user_params",
-        "scheme": [
-            {"label": "Firstname", "cell_type": "input/text"},
-            {"label": "Lastname", "cell_type": "input/text"},
-            {"label": "Status", "cell_type": "select", "options": [
-                {"label": "ACTIVE", "value": "ACTIVE"},
-                {"label": "INACTIVE", "value": "INACTIVE"}
-            ]},
-            {"label": "IS_ADMIN", "cell_type": "input/checkbox"},
-        ],
-        "more_columns": false
-    },
+    id: undefined,
+    type: undefined,
+    scheme: undefined,
     name: undefined,
     state: undefined,
     user_infos: {
@@ -163,14 +166,21 @@ socket.on('connect_room', function(msg) {
         valid = false;
         return false;
     }
-    if(room.scheme == undefined) {
-        room.scheme = msg.settings.scheme;
-    }
+    // if(room.scheme == undefined) {
+        room.scheme = msg.settings;
+        m_app.changeTable(msg.settings);
+    // }
     if(room.name == undefined) {
         room.name = msg.settings.name;
     }
     if(getLocaleRoomId() == undefined) {
-        getLocaleRoomId() = msg.settings.id;
+        room.id = msg.settings.id;
+    }
+    if(room.type == undefined) {
+        room.type = msg.settings.type;
+    }
+    if(room.state == undefined) {
+        room.state = msg.state;
     }
 
     if(msg.me) {
@@ -281,6 +291,6 @@ window.onbeforeunload = function(event) {
     console.log(room.user_infos);
     socket.emit('user_leave', {
         room_id: getLocaleRoomId(),
-        id: room.user_infos.id
+        user_id: room.user_infos.id
     });
 }

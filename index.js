@@ -11,38 +11,6 @@ app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
 });
 
-// {
-//     room1: {
-//         name: 'Movies',
-//         id: 'room1',
-//         scheme: [
-//             {'label': 'Name', 'cell_type': 'input/text'},
-//             {'label': 'Start date', 'cell_type': 'input/date'},
-//             {'label': 'Stop date', 'cell_type': 'input/date'},
-//         ],
-//     },
-//     room2: {
-//         name: 'Users',
-//         id: 'room2',
-//         scheme: [
-//             {'label': 'Firstname', 'cell_type': 'input/text'},
-//             {'label': 'Lastname', 'cell_type': 'input/text'},
-//             {'label': 'Booked', 'cell_type': 'input/checkbox'},
-//         ],
-//     },
-//     room3: {
-//         name: 'Rights',
-//         id: 'room3',
-//         scheme: [
-//             {'label': 'Permission', 'cell_type': 'span/text'},
-//             {'label': 'ADMIN', 'cell_type': 'input/checkbox'},
-//             {'label': 'MANAGER', 'cell_type': 'input/checkbox'},
-//             {'label': 'PRESS', 'cell_type': 'input/checkbox'},
-//             {'label': 'USER', 'cell_type': 'input/checkbox'},
-//         ],
-//     },
-// }
-
 ////////////////////////////////
 ////////// CORE ////////////////
 ////////////////////////////////
@@ -57,10 +25,8 @@ function initSchemes(dir_path) {
 }
 
 function addScheme(scheme) {
-    console.log('addScheme');
     if(!scheme) return false;
     if(!scheme.type) return false;
-    console.log(scheme);
     scheme_list[scheme.type] = scheme;
 }
 
@@ -149,6 +115,13 @@ function roomUsers(room_id) {
     return rooms[room_id].users;
 }
 
+function roomState(room_id) {
+    if(!rooms[room_id]) {
+        return {};
+    }
+    return rooms[room_id].state;
+}
+
 function leaveRoom(user_id, room_id) {
     roomUsers(room_id).splice(
         roomUsers(room_id).findIndex(elem => elem.id === user_id),
@@ -190,14 +163,14 @@ io.on('connection', (socket) => {
         console.log(msg);
         if(msg.room_id == undefined) {
             console.log('No room specified');
-            io.emit('connect_room', {
+            io.to(socket.id).emit('connect_room', {
                 status: 'error',
                 message: 'No room specified'
             });
         }
         if(!roomExists(msg.room_id)) {
             console.log('Room does not exist');
-            io.emit('connect_room', {
+            io.to(socket.id).emit('connect_room', {
                 status: 'error',
                 message: 'Room does not exist'
             });
@@ -212,7 +185,7 @@ io.on('connection', (socket) => {
             list_tokens.push(user.id);
         }
         else {
-            console.log(`New user with id ${msg.user_id}`);
+            console.log(`User with id ${msg.user_id}`);
             user.id = msg.user_id;
             user.name = msg.user_name;
             list_tokens.push(msg.user_id);
@@ -231,15 +204,13 @@ io.on('connection', (socket) => {
             users: roomUsers(msg.room_id),
         });
 
-        console.log(msg.room_id);
-        console.log(scheme_list[msg.room_id]);
-
         io.to(socket.id).emit('connect_room', {
             id: user.id,
             settings: scheme_list[msg.room_id],
-            state: rooms[msg.room_id].state,
+            state: roomState(msg.room_id),
             users: roomUsers(msg.room_id),
             me: user,
+            rooms: rooms,
         });
     })
     ////////////////////////////////////
@@ -267,20 +238,98 @@ io.on('connection', (socket) => {
     });
     ////////////////////////////////////
     socket.on('user_leave', (msg) => {
-        console.log(`User ${msg.id} left the room`);
+        console.log(`User ${msg.user_id} left the room`);
         console.log(msg);
-        roomExists(msg.room_id) && leaveRoom(msg.id, msg.room_id);
-        list_tokens.indexOf(msg.id) > -1 && list_tokens.splice(list_tokens.indexOf(msg.id), 1);
-
+        roomExists(msg.room_id) && leaveRoom(msg.user_id, msg.room_id);
+        list_tokens.indexOf(msg.user_id) > -1 && list_tokens.splice(list_tokens.indexOf(msg.user_id), 1);
+        
         roomEmpty(msg.room_id) && destroyRoom(msg.room_id);
-
+        
         socket.to(msg.room_id).emit('user_leave', {
             users: roomUsers(msg.room_id),
         });
+        
+        if(msg.user_id != undefined) {
+            io.to(msg.room_id).emit('user_leave', {
+                message: `${msg.user_id} s'est déconnecté`,
+            });
+        }
+    });
+    ////////////////////////////////////
+    socket.on('change_room', (msg) => {
+        console.log('Try to change room');
+        console.log(msg);
+        if(msg.new_room_id == undefined) {
+            console.log('No room specified');
+            io.to(socket.id).emit('connect_room', {
+                status: 'error',
+                message: 'No room specified'
+            });
+        }
+        if(!roomExists(msg.new_room_id)) {
+            console.log('Room does not exist');
+            io.to(socket.id).emit('connect_room', {
+                status: 'error',
+                message: 'Room does not exist'
+            });
+        }
 
-        io.to(msg.room_id).emit('user_leave', {
-            message: `${msg.id} s'est déconnecté`,
+        roomExists(msg.room_id) && leaveRoom(msg.user_id, msg.room_id);
+        list_tokens.indexOf(msg.user_id) > -1 && list_tokens.splice(list_tokens.indexOf(msg.user_id), 1);
+        
+        roomEmpty(msg.room_id) && destroyRoom(msg.room_id);
+        
+        console.log(`A new user try to access a room`);
+        let user = {};
+        if(msg.user_id == undefined) {
+            console.log('Create id');
+            user = getRandomUser();
+            console.log(`New user with id ${user.id}`);
+            list_tokens.push(user.id);
+        }
+        else {
+            console.log(`User with id ${msg.user_id}`);
+            leaveRoom(msg.user_id, msg.room_id)
+            user.id = msg.user_id;
+            user.name = msg.user_name;
+            list_tokens.push(msg.user_id);
+        }
+
+        if(!roomOpened(msg.new_room_id)) {
+            console.log('Room is not yet open. Opening');
+            openRoom(msg.new_room_id, user);
+        }
+        joinRoom(msg.new_room_id, user, socket.id);
+        socket.join(msg.new_room_id);
+
+        console.log('User entered the room');
+
+        socket.to(msg.new_room_id).emit('connect_room', {
+            users: roomUsers(msg.new_room_id),
         });
+        
+        if(msg.user_id != undefined) {
+            io.to(msg.room_id).emit('user_leave', {
+                message: `${msg.user_id} s'est déconnecté`,
+            });
+        }
+
+        socket.to(msg.room_id).emit('connect_room', {
+            users: roomUsers(msg.room_id),
+        });
+
+        io.to(socket.id).emit('connect_room', {
+            id: user.id,
+            settings: scheme_list[msg.room_id],
+            state: roomState(msg.room_id),
+            users: roomUsers(msg.room_id),
+            me: user,
+            rooms: rooms,
+        });
+
+        io.to(msg.room_id).emit('change_room', {
+
+        })
     });
 });
 
