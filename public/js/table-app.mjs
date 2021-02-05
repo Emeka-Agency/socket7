@@ -68,15 +68,18 @@ const app = {
 
     destroy() {
         app.gearSpinner.removeEventListener('click', app.handleDrawerClick, true);
-        app.addCol.removeEventListener('click', app.handleAddColOnClick, true);
+        // app.addCol.removeEventListener('click', app.handleAddColOnClick, true);
         app.addRow.removeEventListener('click', app.handleAddRowOnClick, true);
+        app.openModale.removeEventListener('click', app.handleOpenModal, true);
         app.checkRow.forEach(element => {
             element.removeEventListener('click', app.handleSelectRowOnClick, true);
         });
+        app.gearSpinner.removeEventListener('click', app.handleDrawerClick, true);
     },
 
     // Builder to eventlistener
     buildAddEventListener() {
+        app.gearSpinner.addEventListener('click', app.handleDrawerClick, true);
         // app.addCol.addEventListener('click', app.handleAddColOnClick, true);
         app.addRow.addEventListener('click', app.handleAddRowOnClick, true);
         app.openModale.addEventListener('click', app.handleOpenModal, true);
@@ -278,7 +281,7 @@ const app = {
         // on build emit get_state
         // for i <th scope="row">i</th>
     
-        app.fillState(20);
+        app.fillState();
     },
 
     fillState(base = null) {
