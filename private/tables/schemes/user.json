@@ -8,7 +8,8 @@
             {"label": "ACTIVE", "value": "ACTIVE"},
             {"label": "INACTIVE", "value": "INACTIVE"}
         ]},
-        {"label": "IS_ADMIN", "cell_type": "input/checkbox"}
+        {"label": "IS_ADMIN", "cell_type": "input/checkbox"},
+        {"label": "Téléphone", "cell_type": "input/tel"}
     ],
     "more_columns": false
 }

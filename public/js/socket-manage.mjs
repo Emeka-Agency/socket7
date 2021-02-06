@@ -161,12 +161,19 @@ socket.on('connect_room', function(msg) {
     if(msg.user) {
         room.updateUser(msg.user);
     }
-    if(msg.params) {
-        room.updateRoom(msg.params);
-        m_app.setParams(msg.params);
-    }
     if(msg.room_id) {
         room.id = msg.room_id;
+    }
+    if(msg.params) {
+        room.updateRoom(msg.params);
+    }
+    if(msg.state && JSON.stringify(room.state) != JSON.stringify(msg.state)) {
+        room.state = msg.state;
+        m_app.params = msg.params;
+        m_app.buildTable(msg.state);
+    }
+    else if(msg.params) {
+        m_app.setParams(msg.params);
     }
 });
 

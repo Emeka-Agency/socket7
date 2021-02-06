@@ -1,10 +1,10 @@
 const head_menus = [
-    {'label': 'Jour à Jour', 'type': 'jaj'},
+    // {'label': 'Jour à Jour', 'type': 'jaj'},
     // {'label': 'Booking manager', 'type': 'bookman'},
     // {'label': 'Validation manager', 'type': 'valiman'},
     // {'label': 'Confirmation manager', 'type': 'confman'},
-    {'label': 'Movies', 'type': 'movies_list'},
-    {'label': 'Users', 'type': 'user_params'},
+    {'label': 'Films', 'type': 'movies_list'},
+    {'label': 'Utilisateurs', 'type': 'user_params'},
     {'label': 'Permissions', 'type': 'permissions'},
 ];
 
@@ -48,7 +48,7 @@ const app = {
 
     init() {
         !app.navigationBuilt && app.buildNavigation();
-        if(!app.tableType) {
+        if(!app.tableType()) {
             return false;
         }
         app.buildInterface();
@@ -56,7 +56,7 @@ const app = {
 
         app.checkAllRow = document.querySelector('.sheet-selector');
         // checkbox for select one row
-        app.checkRow = document.querySelectorAll('.line-selector'),
+        app.checkRow = document.querySelectorAll('.line-selector');
         // open modale add row & col
         // Add new row
         // TODO: make event to button
@@ -259,7 +259,7 @@ const app = {
     //     addInto(oneByType('body'), tab.join(' '));
     },
     
-    buildTable() {
+    buildTable(state = undefined) {
         let index = -1; tab = [], scheme = app.scheme();
         tab[++index] = `<div class="main-table">`;
         tab[++index] = `<div class="row">`;
@@ -282,45 +282,58 @@ const app = {
         // on build emit get_state
         // for i <th scope="row">i</th>
     
-        app.fillState();
+        app.fillState(state);
     },
 
-    fillState(base = null) {
-        let index = -1, tab = [], scheme = app.scheme();
+    fillState(base = 20) {
+        let content = '';
         // base is random number used for tests
-        if(base != null) {
+        if(base != null && typeof base == 'number') {
             // console.log('Fill table with blank lines');
             for(let i = 0; i < base; i++) {
-                tab[++index] = `<div class="row">`;
-                tab[++index] = `<div class="col colContent">`;
-                if(scheme) {
-                    tab[++index] = `<div class="cell for-checkbox line-selector">`;
-                    tab[++index] = `<input id="${i + 1}-checkbox" type="checkbox" class="all-select"/>`;
-                    tab[++index] = `<label for="${i + 1}-checkbox" class="checkrow"></label>`;
-                    tab[++index] = `</div>`;
-                    tab[++index] = `<div id="${i + 1}-${0}" class="cell tab-line-index">${i + 1}</div>`;
-                    for(let j = 0; j < scheme.length; j++) {
-                        tab[++index] = app.cellType(scheme[j], i + 1, j + 1);
-                    }
-                }
-                tab[++index] = `</div>`;
-                tab[++index] = `</div>`;
+                content += app.createLine(i);
             }
         }
         else {
             // console.log('Fill table with datas');
+            Object.keys(base).forEach(function(key) {
+                content += app.createLine(key, base[key]);
+            });
         }
 
-        addInto(oneByType('.main-table'), purgeString(tab.join(' ')));
+        addInto(oneByType('.main-table'), content);
+
+        app.checkRow = document.querySelectorAll('.line-selector');
 
         app.init_cells();
 
         app.built = true;
     },
 
+    createLine(_i, value = null) {
+        let index = -1, tab = [], scheme = app.scheme();
+        tab[++index] = `<div class="row">`;
+        tab[++index] = `<div class="col colContent">`;
+        if(scheme) {
+            tab[++index] = `<div class="cell for-checkbox line-selector">`;
+            tab[++index] = `<input id="${_i}-checkbox" type="checkbox" class="all-select"/>`;
+            tab[++index] = `<label for="${_i}-checkbox" class="checkrow"></label>`;
+            tab[++index] = `</div>`;
+            tab[++index] = `<div id="${_i}-${0}" class="cell tab-line-index">${_i}</div>`;
+            for(let j = 0; j < scheme.length; j++) {
+                tab[++index] = app.cellType(scheme[j], _i, j + 1, value != null ? value[`c-${_i}-${j + 1}`] : undefined);
+            }
+        }
+        tab[++index] = `</div>`;
+        tab[++index] = `</div>`;
+
+        return purgeString(tab.join(' '));
+    },
+
     //  select multiple inputs (with ctrl + click and option multi-click dans une toolbar)
 
     cellType(params, x, y, value = '---') {
+        console.log(value);
         let index = -1, tab = [];
         tab[++index] = `<div id="c-${x}-${y}" class="cell`;
         if(params.cell_type != 'span/text') tab[index] += ` sheet-cell`;
@@ -331,25 +344,26 @@ const app = {
         tab[index] += `">`;
         switch(params.cell_type) {
             case 'input/text':
-                tab[++index] = `<input class="inactive to-exchange" type="text"/>`;
+                tab[++index] = `<input class="inactive to-exchange" type="text" value="${value}"/>`;
                 break;
             case 'input/date':
                 tab[++index] = `<input class="inactive to-exchange" type="date"/>`;
                 break;
             case 'input/checkbox':
                 tab[++index] = `<label for="${x}-${y}-checkbox" class="active switch">`;
-                tab[++index] = `<input id="${x}-${y}-checkbox" type="checkbox" class="to-exchange">`;
+                tab[++index] = `<input id="${x}-${y}-checkbox" type="checkbox" class="to-exchange" ${value ? 'checked' : ''}>`;
                 tab[++index] = `<span class="slider round"></span>`;
                 tab[++index] = `</label>`;
                 break;
             case 'select':
                 tab[++index] = `<select class="active to-exchange">`;
                 params.options.forEach((option) => {
-                    tab[++index] = `<option value="${option.value}">${option.label}</option>`;
+                    tab[++index] = `<option value="${option.value}" ${value == option.value ? 'selected' : ''}>${option.label}</option>`;
                 })
                 tab[++index] = `</select>`;
                 break;
             case 'span/text':
+                tab[++index] = `<span class="active text">${value}</span>`;
             default:
                 break;
         }

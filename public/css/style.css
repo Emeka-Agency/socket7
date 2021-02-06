@@ -400,6 +400,15 @@ main .main-table input {
     align-items: center;
 }
 
+main .main-table span {
+    max-width: 100px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    margin: 0 5px;
+}
+
 /*
 * Field active / inactive
 */

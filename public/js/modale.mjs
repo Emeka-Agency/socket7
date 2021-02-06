@@ -55,22 +55,22 @@ function addcol(onOpen = null, onClose = null) {
         modaleClass: 'column-add',
         contentClass: 'column-add',
         content: `
-        <h2>Ajouter des collonnes supplémentaires</h2>
+        <h2>Ajouter une colonne supplémentaire</h2>
         <form>
             <label for="name-col" class="label-name">Choisir un nom :</label>
             <input type="text" name="name-col" id="name-col"></input>
             <label for="type-select" class="label-select">Choisir un type :</label>
             <select name="types" id="type-select>
-                <option value="texte">Texte</option>
+                <option value="texte">Champ texte</option>
                 <option value="date">Date</option>
-                <option value="tel">Tel</option>
-                <option value="url">Url</option>
-                <option value="numero">Numéro</option>
-                <option value="select">Select</option>
-                <option value="checkbox">Checkbox</option>
+                <option value="tel">Téléphone</option>
+                <option value="url">Adresse URL</option>
+                <option value="number">Nombre</option>
+                <option value="select">Liste d'options</option>
                 <option value="email">Email</option>
-                <option value="data">Data liste</option>
-                <option value="radio">Radio</option>
+                <option value="data">Liste filtrable</option>
+                <option value="checkbox">Case à cocher</option>
+                <option value="radio">Choix unique</option>
             </select>
             <button type="button">Ajouter!</button>
         </form>

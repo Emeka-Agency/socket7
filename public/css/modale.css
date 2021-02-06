@@ -52,6 +52,10 @@
 ***********************************************************
 */
 
+.drawer.active + #modale.column-add #modale-container.column-add {
+    left: 410px;
+}
+
 #modale.column-add {
     background: rgba(190, 190, 190, 0.3);
 }

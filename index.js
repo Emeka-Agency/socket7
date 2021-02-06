@@ -59,16 +59,23 @@ initSchemes(`${__dirname}/private/tables/schemes`);
 //     id_project_YYMMDD: {
 //         'id_spread': 15,
 //          'state': {
-//              'a-1': {'used': true, 'user': 'token'},
-//              'a-2': {'used': false, 'user': 'token'},
-//              'a-3': {'used': true, 'user': 'token'},
-//              'b-1': {'used': false, 'user': 'token'},
-//              'b-2': {'used': true, 'user': 'token'},
-//              'b-3': {'used': false, 'user': 'token'},
-//              'c-1': {'used': false, 'user': 'token'},
-//              'c-2': {'used': false, 'user': 'token'},
-//              'c-3': {'used': true, 'user': 'token'},
-//          }
+//              'columns': 3,
+//              'a': {
+//                  'c-a-1': {'used': true, 'user': 'token'},
+//                  'c-a-2': {'used': false, 'user': 'token'},
+//                  'c-a-3': {'used': true, 'user': 'token'},
+//              },
+//              'b': {
+//                  'c-b-1': {'used': false, 'user': 'token'},
+//                  'c-b-2': {'used': true, 'user': 'token'},
+//                  'c-b-3': {'used': false, 'user': 'token'},
+//              },
+//              'c': {
+//                  'c-c-1': {'used': false, 'user': 'token'},
+//                  'c-c-2': {'used': false, 'user': 'token'},
+//                  'c-c-3': {'used': true, 'user': 'token'},
+//              },
+//          },
 //         'users': {
 //             'id': {
 //                 'name': '',
@@ -96,9 +103,61 @@ function roomScheme(room_id) {
     return scheme_list[room_id];
 }
 
+function fakerDatas(room_id) {
+    const lines = Math.random() * 30 + 10;
+    let index = 0, _bool;
+    switch(room_id) {
+        case 'movies_list':
+            for(let i = 1; i <= lines; i++) {
+                index = 0;
+                _bool = faker.random.boolean();
+                setStateLine(room_id, i, {});
+
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.name.title())/* Name */
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.date.past())/* Start date */
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.date.future())/* Stop date */
+            }
+            break;
+        case 'user_params':
+            for(let i = 1; i <= lines; i++) {
+                index = 0;
+                _bool = faker.random.boolean();
+                setStateLine(room_id, i, {});
+
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.name.firstName())/* Firstname */
+                !_bool && index++;
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.name.lastName())/* Lastname */
+                !_bool && index++;
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, Math.random() * 2 > 1 ? 'ACTIVE' : 'INACTIVE')/* Status */
+                !_bool && index++;
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.random.boolean())/* IS_ADMIN */
+                !_bool && index++;
+                faker.random.boolean() && setRoomState(room_id, i, `c-${i}-${++index}`, faker.phone.phoneNumber())/* Téléphone */
+            }
+            break;
+        case 'permissions':
+            for(let i = 1; i <= lines; i++) {
+                index = 0;
+                _bool = faker.random.boolean();
+                setStateLine(room_id, i, {});
+
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.lorem.sentence())/* Permission */
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.random.boolean())/* ADMIN */
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.random.boolean())/* MANAGER */
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.random.boolean())/* PRESS */
+                _bool && setRoomState(room_id, i, `c-${i}-${++index}`, faker.random.boolean())/* USER */
+            }
+            break;
+        default:
+            return false;
+    }
+    return true;
+}
+
 function openRoom(room_id, user) {
     if(roomExists(room_id) && !roomOpened(room_id)) {
         rooms[room_id] = {
+            // when add col change nb_lines
             scheme: getScheme(room_id),
             state: {},
             users: {
@@ -108,6 +167,7 @@ function openRoom(room_id, user) {
                 }
             },
         }
+        fakerDatas(room_id);
         return true;
     }
     return false;
@@ -118,12 +178,16 @@ function addRowToState(room_id, id_line, col_offset) {
         return false;
     }
     getScheme(room_id).forEach(function(elem, index) {
-        setRoomState(room_id, `c-${id_line}-${index + col_offset}`, '');
+        setRoomState(room_id, id_line, `c-${id_line}-${index + col_offset}`, '');
     });
 }
 
-function setRoomState(room_id, cell_id, value) {
-    rooms[room_id].state[cell_id] = value;
+function setStateLine(room_id, line, value) {
+    rooms[room_id].state[line] = value;
+}
+
+function setRoomState(room_id, line, cell_id, value) {
+    rooms[room_id].state[line][cell_id] = value;
 }
 
 function roomUsers(room_id) {
@@ -261,7 +325,7 @@ io.on('connection', (socket) => {
         console.log('Everything is right');
         if(params.change_state) {
             console.log('Set state');
-            setRoomState(params.room_id, params.cell_id, params.value);
+            setRoomState(params.room_id, params.cell_id.split('-')[1], params.cell_id, params.value);
         }
         return true;
     }
@@ -326,10 +390,10 @@ io.on('connection', (socket) => {
 
         console.log(`Emit on channel connect_room to socket ${socket.id}`);
         io.to(socket.id).emit('connect_room', {
-            room_id: msg.room_id,
+            room_id: msg.new_room,
             params: roomScheme(msg.new_room),
-            users: roomUsers(msg.room_id),
-            state: getState(msg.room_id),
+            users: roomUsers(msg.new_room),
+            state: getState(msg.new_room),
         });
     });
     ////////////////////////////////////
