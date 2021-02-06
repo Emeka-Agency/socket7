@@ -80,19 +80,13 @@ div.sheet-cell input {
     outline: transparent;
 }
 
-span.used,
-input.used,
-select.used,
-span.inactive,
-input.inactive,
-select.inactive {
+main .main-table span.used,
+main .main-table input.used,
+main .main-table select.used,
+main .main-table span.inactive,
+main .main-table input.inactive,
+main .main-table select.inactive {
     display: none;
-}
-
-span.active,
-input.active,
-select.active {
-    display: block;
 }
 
 header {
@@ -392,7 +386,7 @@ main .main-table .row .c-title {
 * span & input
 */
 main .main-table span,
-input {
+main .main-table input {
     position: absolute;
     left: 0;
     top: 0;

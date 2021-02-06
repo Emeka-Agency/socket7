@@ -10,7 +10,7 @@
     width: 100%;
     height: 100%;
     z-index: -1;
-    /* background: rgba(127, 127, 127, 0.5); */
+    background-color: #0008;
     opacity: 0;
 }
 
@@ -21,31 +21,29 @@
 }
 
 #modale #modale-container {
-    position: absolute;
-    top: 110px;
-    left: 60px;
-    width: 200px;
-    height: 250px;
-    border-radius: 5px;
-    background-color: #ffffff;
+    width: 60%;
+    height: 80%;
+    background-color: rgb(79, 183, 171);
+    /* border-top: 5px solid rgb(65, 173, 173); */
     margin: 0 auto;
-    box-shadow: black 0px 0px 8px;
+    top: 10%;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.8) 0px 0px 5px;
 }
 
 #modale #modale-container #modale-content #modale-close {
     position: absolute;
-    z-index: 1000;
     right: 15px;
     top: 15px;
     font-size: 50px;
     font-weight: 400;
-    color: black;
+    color: rgba(253, 253, 253, 0.8);
     cursor: pointer;
     transform: rotate(45deg);
 }
 
 #modale #modale-container #modale-content #modale-close:hover {
-    color: red;
+    color: rgb(65, 173, 173);
 }
 
 /*
@@ -53,6 +51,28 @@
 *********************** ADD COL CSS ***********************
 ***********************************************************
 */
+
+#modale.column-add {
+    background: rgba(190, 190, 190, 0.3);
+}
+
+#modale.column-add #modale-container.column-add {
+    width: 350px;
+    height: 300px;
+    left: 60px;
+    position: absolute;
+    top: 110px;
+    box-shadow: rgba(0, 0, 0, 0.8) 2px 2px 5px;
+    padding: 15px;
+}
+
+#modale.column-add #modale-container.column-add #modale-content #modale-close {
+    right: -10px;
+    top: -15px;
+    line-height: 1;
+    z-index: 1;
+}
+
 #modale #modale-content {
     position: relative;
     width: 100%;

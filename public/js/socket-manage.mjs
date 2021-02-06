@@ -1,5 +1,13 @@
 // mettre user en sessionStorage pour le retrouver sur un même tab et avoir plusieurs users
 
+const socketAddRow = function(id_line) {
+    socket.emit('add_row', {
+        room_id: roomId(),
+        id_line: id_line,
+        col_offset: 1,
+    });
+}
+
 const initNavigationLink = (elem) => {
     if(!elem) {
         return false;
@@ -26,67 +34,74 @@ const initCellTriggers = (elem = null) => {
         return false;
     }
     // console.log(elem.id);
-    if(cellIsSelect(elem)) {
+    if(cellIsSelect(elem) || cellIsDate(elem)) {
         byId(elem.id).addEventListener('change', function(event) {
             // event.preventDefault();
             if(cellIsUsed(elem)) {
                 console.log('Elem is already used by another user.')
                 return false;
             }
+            console.log("change_cell");
             socket.emit("change_cell", {
                 cell_id: elem.id,
-                user: userId(),
+                user_id: userId(),
                 room_id: roomId(),
                 value: getCellValue(elem),
-            })
+                change_state: true,
+            });
+            return true;
         });
     }
-    else if(cellIsText(elem) || cellIsDate(elem) || cellIsCheckbox(elem)) {
+    if(cellIsText(elem) || cellIsCheckbox(elem)) {
         byId(elem.id).addEventListener('click', function(event) {
             // event.preventDefault();
             if(cellIsUsed(elem)) {
                 console.log('Elem is already used by another user.')
                 return false;
             }
+            console.log('click_cell');
             socket.emit('click_cell', {
                 cell_id: elem.id,
-                user: userId(),
+                user_id: userId(),
                 room_id: roomId(),
-            })
+                value: cellIsCheckbox(elem) ? getCellValue(elem) : null,
+                change_state: cellIsCheckbox(elem),
+            });
+            return true;
         });
     }
-    else if(cellIsText(elem) || cellIsDate(elem)) {
+    if(cellIsText(elem)) {
         byId(elem.id).addEventListener('focusout', function(event) {
             // event.preventDefault();
             if(cellIsUsed(elem)) {
                 console.log('Elem is already used by another user.')
                 return false;
             }
+            console.log('leave_cell');
             socket.emit('leave_cell', {
                 cell_id: elem.id,
-                user: userId(),
+                user_id: userId(),
                 room_id: roomId(),
                 value: getCellValue(elem),
+                change_state: true,
             });
+            return true;
         });
-    }
-    else {
-        return false;
     }
 }
 
 function getCellValue(elem) {
     if(cellIsText(elem)) {
-        return byId(elem.currentTarget.id).querySelector('.to-exchange').value;
+        return elem.querySelector('.to-exchange').value;
     }
     if(cellIsDate(elem)) {
-        return byId(elem.currentTarget.id).querySelector('.to-exchange').value;
+        return elem.querySelector('.to-exchange').value;
     }
     if(cellIsCheckbox(elem)) {
-        return byId(elem.currentTarget.id).querySelector('.to-exchange').checked;
+        return elem.querySelector('.to-exchange').checked;
     }
     if(cellIsSelect(elem)) {
-        return byId(elem.currentTarget.id).querySelector('.to-exchange').value;
+        return elem.querySelector('.to-exchange').value;
     }
 }
 
@@ -153,15 +168,15 @@ socket.on('connect_room', function(msg) {
     if(msg.room_id) {
         room.id = msg.room_id;
     }
-})
+});
 
 socket.on('user_connection', function(msg) {
     console.log(msg);
-})
+});
 
 socket.on('change_room', function(msg) {
     console.log(msg);
-})
+});
 
 socket.on('leave_room', function(msg) {
     console.log(msg);
@@ -175,8 +190,10 @@ window.onbeforeunload = function(event) {
 }
 
 socket.on('click_cell', function(msg) {
-    let cell = byId(msg.cell);
-    if(cellIsText(cell) && isMe(msg.user)) {
+    console.log('click_cell');
+    console.log(msg);
+    let cell = byId(msg.cell_id);
+    if(cellIsText(cell) && isMe(msg.user_id) && msg.used) {
         console.log('I activate the input/text');
         cell.querySelector('span.to-exchange').classList.remove('active');
         cell.querySelector('span.to-exchange').classList.add('inactive');
@@ -187,12 +204,12 @@ socket.on('click_cell', function(msg) {
         cell.classList.remove('inactive');
         cell.classList.add('active');
     }
-    if(cellIsText(cell) && !isMe(msg.user)) {
+    if(cellIsText(cell) && !isMe(msg.user_id)) {
         console.log('The input/text is used');
         cell.classList.remove('active');
         cell.classList.add('inactive');
     }
-    if(cellIsDate(cell) && isMe(msg.user)) {
+    if(cellIsDate(cell) && isMe(msg.user_id)) {
         console.log('I activate the input/date');
         cell.querySelector('span.to-exchange').classList.remove('active');
         cell.querySelector('span.to-exchange').classList.add('inactive');
@@ -201,38 +218,48 @@ socket.on('click_cell', function(msg) {
         cell.classList.remove('inactive');
         cell.classList.add('active');
     }
-    if(cellIsDate(cell) && !isMe(msg.user)) {
+    if(cellIsDate(cell) && !isMe(msg.user_id)) {
         console.log('The input/date is used');
         cell.classList.remove('active');
         cell.classList.add('inactive');
     }
+    if(cellIsCheckbox(cell) && !isMe(msg.user_id)) {
+        console.log(`Change checkbox value to ${msg.value}`);
+        oneByType(`#${msg.cell_id} input[type="checkbox"].to-exchange`).checked = msg.value;
+    }
 });
 
 socket.on('change_cell', function (msg) {
+    console.log('change_cell');
     console.log(msg);
-})
+    let cell = byId(msg.cell_id);
+    if(cellIsSelect(cell) && !isMe(msg.user_id)) {
+        oneByType(`#${msg.cell_id} select.to-exchange`).value = msg.value;
+    }
+});
 
 socket.on('leave_cell', function(msg) {
-    let cell = byId(msg.cell);
+    console.log('leave_cell');
+    console.log(msg);
+    let cell = byId(msg.cell_id);
     
-    if(cellIsText(cell)) {
-        cell.querySelector('span').innerHTML = msg.cell_value || '---';
+    if(cellIsText(cell) && isMe(msg.user_id)) {
+        cell.querySelector('span').innerHTML = msg.value || '---';
         cell.querySelector('.to-exchange').classList.remove('active');
         cell.querySelector('.to-exchange').classList.add('inactive');
         cell.querySelector('span.to-exchange').classList.remove('inactive');
         cell.querySelector('span.to-exchange').classList.add('active');
+    }
+    if(cellIsText(cell) && !isMe(msg.user_id)) {
+        cell.querySelector('span').innerHTML = msg.value || '---';
+        cell.classList.remove('inactive');
+        cell.classList.add('active');
     }
     if(cellIsDate(cell)) {
         cell.querySelector('.to-exchange').classList.remove('active');
         cell.querySelector('.to-exchange').classList.add('inactive');
         cell.querySelector('span.to-exchange').classList.remove('inactive');
         cell.querySelector('span.to-exchange').classList.add('active');
-    }
-    if(cellIsCheckbox(cell) && !isMe(msg.user)) {
-        cell.querySelector ('.to-exchange').checked = msg.cell_value;
-    }
-    if(cellIsSelect(cell) && !isMe(msg.user)) {
-        cell.querySelector ('.to-exchange').value = msg.cell_value;
     }
 
     if(isMe(msg.user_id)) {
@@ -247,4 +274,8 @@ socket.on('leave_cell', function(msg) {
 
 socket.on('chat_message', function (msg) {
     console.log(msg);
-})
+});
+
+socket.on('add_row', function(msg) {
+    m_app.handleAddRowOnClick();
+});

@@ -206,13 +206,14 @@ const app = {
     },
 
     // Add more row
-    handleAddRowOnClick: (evt) => {
-        console.log("handleAddRowOnClick");
+    handleAddRowOnClick: (evt = null) => {
+
         let index = -1, tab = [], scheme = app.scheme();
         tab[++index] = `<div class="row">`;
         tab[++index] = `<div class="col colContent">`;
         if(scheme) {
             const idCell = document.querySelectorAll('.row').length - 1;
+            evt && socketAddRow(idCell);
             tab[++index] = `<div class="cell for-checkbox line-selector">`;
             tab[++index] = `<input id="${idCell + 1}-checkbox" type="checkbox" class="all-select"/>`;
             tab[++index] = `<label for="${idCell + 1}-checkbox"  class="checkrow"></label>`;
@@ -321,7 +322,7 @@ const app = {
 
     cellType(params, x, y, value = '---') {
         let index = -1, tab = [];
-        tab[++index] = `<div id="${x}-${y}" class="cell`;
+        tab[++index] = `<div id="c-${x}-${y}" class="cell`;
         if(params.cell_type != 'span/text') tab[index] += ` sheet-cell`;
         if(params.cell_type == 'input/text') tab[index] +=  ` for-text`;
         if(params.cell_type == 'input/date') tab[index] +=  ` for-date`;

@@ -52,7 +52,8 @@ function addcol(onOpen = null, onClose = null) {
     return {
         onOpen: onOpen,
         onClose: onClose,
-        contentClass: 'project-maker',
+        modaleClass: 'column-add',
+        contentClass: 'column-add',
         content: `
         <h2>Ajouter des collonnes supplémentaires</h2>
         <form>
@@ -60,16 +61,16 @@ function addcol(onOpen = null, onClose = null) {
             <input type="text" name="name-col" id="name-col"></input>
             <label for="type-select" class="label-select">Choisir un type :</label>
             <select name="types" id="type-select>
-                <option value="">texte</option>
-                <option value="">date</option>
-                <option value="">tel</option>
-                <option value="">url</option>
-                <option value="">numéro</option>
-                <option value="">select</option>
-                <option value="">checkbox</option>
-                <option value="">email</option>
-                <option value="">data liste</option>
-                <option value="">radio</option>
+                <option value="texte">Texte</option>
+                <option value="date">Date</option>
+                <option value="tel">Tel</option>
+                <option value="url">Url</option>
+                <option value="numero">Numéro</option>
+                <option value="select">Select</option>
+                <option value="checkbox">Checkbox</option>
+                <option value="email">Email</option>
+                <option value="data">Data liste</option>
+                <option value="radio">Radio</option>
             </select>
             <button type="button">Ajouter!</button>
         </form>

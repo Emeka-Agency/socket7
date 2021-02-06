@@ -39,7 +39,14 @@ function getRandomToken(type = undefined, range = 32) {
 }
 
 function getScheme(room_id) {
-    return scheme_list[room_id];
+    return roomOpened(room_id) ? rooms[room_id].scheme : scheme_list[room_id].scheme;
+}
+
+function getState(room_id) {
+    if(roomExists(room_id) && roomOpened(room_id)) {
+        return rooms[room_id].state || {};
+    }
+    return {};
 }
 
 var rooms = {};
@@ -104,6 +111,19 @@ function openRoom(room_id, user) {
         return true;
     }
     return false;
+}
+
+function addRowToState(room_id, id_line, col_offset) {
+    if(!roomExists(room_id) || !roomOpened(room_id)) {
+        return false;
+    }
+    getScheme(room_id).forEach(function(elem, index) {
+        setRoomState(room_id, `c-${id_line}-${index + col_offset}`, '');
+    });
+}
+
+function setRoomState(room_id, cell_id, value) {
+    rooms[room_id].state[cell_id] = value;
 }
 
 function roomUsers(room_id) {
@@ -185,6 +205,16 @@ function removeUserToken(user_id) {
     list_tokens.splice(list_tokens.indexOf(user_id), 1);
 }
 
+function getUser(user_id, room_id) {
+    if(!roomExists(room_id) && !roomOpened(room_id)) {
+        return false;
+    }
+    if(!userExists(user_id)) {
+        return false;
+    }
+    return roomUsers(room_id)[user_id] || false;
+}
+
 ////////////////////////////////
 ////////// SOCKET //////////////
 ////////////////////////////////
@@ -219,6 +249,22 @@ io.on('connection', (socket) => {
             }
         }
     }
+    function handleCellAction(channel, params) {
+        console.log('checkRoom');
+        if(!checkRoom(channel, params.room_id)) {
+            return false;
+        }
+        console.log('userExists');
+        if(!userExists(params.user_id)) {
+            return false;
+        }
+        console.log('Everything is right');
+        if(params.change_state) {
+            console.log('Set state');
+            setRoomState(params.room_id, params.cell_id, params.value);
+        }
+        return true;
+    }
     ////////////////////////////////////
     socket.on('connect_user', (msg) => {
         console.log(msg);
@@ -247,6 +293,8 @@ io.on('connection', (socket) => {
             user: user,
             room_id: msg.room_id,
             params: roomScheme(msg.room_id),
+            users: roomUsers(msg.room_id),
+            state: getState(msg.room_id),
         });
     });
     ////////////////////////////////////
@@ -263,13 +311,12 @@ io.on('connection', (socket) => {
         removeUserFromRoom(msg.user.id, msg.room_id);
         addUserInRoom(msg.user, msg.new_room);
 
-        socket.leave(msg.room_id);
-
         console.log(`Emit on channel user_leave to room ${msg.room_id}`);
         socket.to(msg.room_id).emit('user_leave', {
             users: roomUsers(msg.room_id),
         });
 
+        socket.leave(msg.room_id);
         socket.join(msg.new_room);
 
         console.log(`Emit on channel user_connection to room ${msg.new_room}`);
@@ -281,6 +328,8 @@ io.on('connection', (socket) => {
         io.to(socket.id).emit('connect_room', {
             room_id: msg.room_id,
             params: roomScheme(msg.new_room),
+            users: roomUsers(msg.room_id),
+            state: getState(msg.room_id),
         });
     });
     ////////////////////////////////////
@@ -302,18 +351,61 @@ io.on('connection', (socket) => {
     ////////////////////////////////////
     socket.on('click_cell', (msg) => {
         console.log(msg);
+        if(!handleCellAction('click_cell', msg)) {
+            return false;
+        }
+        socket.to(msg.room_id).emit('click_cell', {
+            cell_id: msg.cell_id,
+            user: getUser(msg.user_id, msg.room_id),
+            user_id: msg.user_id,
+            value: msg.value,
+        });
+        io.to(socket.id).emit('click_cell', {
+            cell_id: msg.cell_id,
+            used: true,
+            user_id: msg.user_id,
+        });
     });
     ////////////////////////////////////
     socket.on('change_cell', (msg) => {
         console.log(msg);
+        if(!handleCellAction('change_cell', msg)) {
+            return false;
+        }
+        socket.to(msg.room_id).emit('change_cell', {
+            cell_id: msg.cell_id,
+            user: getUser(msg.user_id, msg.room_id),
+            user_id: msg.user_id,
+            value: msg.value,
+        });
     });
     ////////////////////////////////////
     socket.on('leave_cell', (msg) => {
         console.log(msg);
+        if(!handleCellAction('leave_cell', msg)) {
+            return false;
+        }
+        socket.to(msg.room_id).emit('leave_cell', {
+            cell_id: msg.cell_id,
+            user: getUser(msg.user_id, msg.room_id),
+            user_id: msg.user_id,
+            value: msg.value,
+        });
+        io.to(socket.id).emit('leave_cell', {
+            cell_id: msg.cell_id,
+            used: false,
+            user_id: msg.user_id,
+            value: msg.value,
+        });
     });
     ////////////////////////////////////
     socket.on('chat_message', (msg) => {
         console.log(msg);
+    });
+    ////////////////////////////////////
+    socket.on('add_row', (msg) => {
+        addRowToState(msg.room_id, msg.id_line, msg.col_offset);
+        socket.to(msg.room_id).emit('add_row', {});
     });
 });
 
