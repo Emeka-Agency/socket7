@@ -1,6 +1,14 @@
 {
     "name": "Confirmation manager",
     "type": "confman",
-    "scheme": [],
+    "scheme": [
+        {"label": "Date", "cell_type": "span/text"},
+        {"label": "Résumé", "cell_type": "span/text"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"}
+    ],
     "more_columns": false
 }

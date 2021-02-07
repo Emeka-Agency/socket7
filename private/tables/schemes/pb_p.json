@@ -1,0 +1,16 @@
+{
+    "name": "PB projet",
+    "type": "pb_p",
+    "scheme": [
+        {"label": "nid", "cell_type": "span/text"},
+        {"label": "Date de mise à jour", "cell_type": "span/text"},
+        {"label": "Titre", "cell_type": "span/text"},
+        {"label": "Titre", "cell_type": "span/text"},
+        {"label": "Nom de famille", "cell_type": "span/text"},
+        {"label": "Prénom", "cell_type": "span/text"},
+        {"label": "Statut", "cell_type": "span/text"},
+        {"label": "Contact", "cell_type": "span/text"},
+        {"label": "Lien de modification", "cell_type": "span/url"}
+    ],
+    "more_columns": false
+}

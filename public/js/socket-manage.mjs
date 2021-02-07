@@ -14,6 +14,11 @@ const initNavigationLink = (elem) => {
     }
     elem.addEventListener('click', function(event) {
         event.preventDefault();
+        if(event.currentTarget.parentElement.classList.contains('current')) {
+            return false;
+        }
+        document.querySelector('h2.current') && document.querySelector('h2.current').classList.remove('current');
+        event.currentTarget.parentElement.classList.add('current');
         if(userId() != undefined && roomId != undefined) {
             socket.emit('change_room', {
                 user: getUser(),
@@ -170,6 +175,7 @@ socket.on('connect_room', function(msg) {
     if(msg.state && JSON.stringify(room.state) != JSON.stringify(msg.state)) {
         room.state = msg.state;
         m_app.params = msg.params;
+        m_app.buildAddEventListener();
         m_app.buildTable(msg.state);
     }
     else if(msg.params) {

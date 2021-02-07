@@ -1,0 +1,26 @@
+{
+    "name": "Contrats",
+    "type": "contracts",
+    "scheme": [
+        {"label": "nid", "cell_type" : "span/text"},
+        {"label": "uid", "cell_type" : "span/text"},
+        {"label": "Nom de famille", "cell_type" : "span/text"},
+        {"label": "Prénom", "cell_type" : "span/text"},
+        {"label": "ID confirmée", "cell_type" : "span/text"},
+        {"label": "Adresse", "cell_type" : "span/text"},
+        {"label": "ID recto", "cell_type" : "span/img"},
+        {"label": "ID verso", "cell_type" : "span/img"},
+        {"label": "ID - Numéro", "cell_type" : "span/text"},
+        {"label": "Identifiant", "cell_type" : "span/text"},
+        {"label": "IBAN", "cell_type" : "span/text"},
+        {"label": "Compte vérifié", "cell_type" : "span/text"},
+        {"label": "Contrat", "cell_type" : "span/text"},
+        {"label": "CA", "cell_type" : "span/text"},
+        {"label": "CA demande", "cell_type" : "span/text"},
+        {"label": "CA expiration", "cell_type" : "span/text"},
+        {"label": "Numéro CA", "cell_type" : "span/text"},
+        {"label": "Confirmation", "cell_type" : "span/url"},
+        {"label": "Refus", "cell_type" : "span/url"}
+    ],
+    "more_columns": false
+}

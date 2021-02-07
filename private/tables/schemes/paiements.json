@@ -1,0 +1,21 @@
+{
+    "name": "Paiements",
+    "type": "payments",
+    "scheme": [
+        {"label": "nid", "cell_type": "span/url"},
+        {"label": "uid", "cell_type": "span/url"},
+        {"label": "Nom de famille", "cell_type": "span/text"},
+        {"label": "Prénom", "cell_type": "span/text"},
+        {"label": "Attribution", "cell_type": "span/text"},
+        {"label": "Type de booking", "cell_type": "span/text"},
+        {"label": "nbr", "cell_type": "span/text"},
+        {"label": "pre", "cell_type": "span/text"},
+        {"label": "Date", "cell_type": "span/text"},
+        {"label": "Flag pré", "cell_type": "span/checkbox"},
+        {"label": "Montant (€)", "cell_type": "span/text"},
+        {"label": "Montant (€)", "cell_type": "span/text"},
+        {"label": "À payer", "cell_type": "span/button"},
+        {"label": "", "cell_type": "span/url"}
+    ],
+    "more_columns": false
+}

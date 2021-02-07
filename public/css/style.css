@@ -56,7 +56,7 @@ td {
 */
 div.sheet-cell.active {
     border: 1px solid blue;
-    background: #f0f;
+    /* background: #f0f; */
 }
 
 div.sheet-cell.used {
@@ -265,6 +265,7 @@ main .head-table {
                 width 0.4s ease-in-out;
     overflow-x: auto;
     overflow-y: hidden;
+    white-space: nowrap;
 }
 
 main .head-table h2 {
@@ -278,6 +279,10 @@ main .head-table h2 {
     position: relative;
     font-size: 20px;
     filter: contrast(0.8);
+}
+
+main .head-table h2.current{
+    color: #ddb400;
 }
 
 main .head-table h2:hover {
@@ -300,6 +305,13 @@ main .main-table .thead {
 
 main .main-table .thead .c-title {
     border-bottom: 3px solid #ACACAF;
+    background-color: #E6E6EA;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    margin: 0;
 }
 
 /*
@@ -332,6 +344,10 @@ main .main-table .cell {
     padding: 5px;
     border: 1px solid #E6E6EA;
     cursor: pointer;
+}
+
+main .main-table .cell.inactive {
+    border: 1px red solid;
 }
 
 main .main-table .cell.for-select {
@@ -378,10 +394,6 @@ main .main-table .cell.line-selector input[type="checkbox"] {
     margin: 5px;
 }
 
-main .main-table .row .c-title {
-    background-color: #E6E6EA;
-}
-
 /*
 * span & input
 */
@@ -419,11 +431,13 @@ input.used {
 
 main .main-table input.active,
 input.active {
-    display: block;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0;
 }
 
 main .main-table .cell.active {
-    background: #F86060;
+    /* background: #F86060; */
     opacity: 0.2;
 }
 

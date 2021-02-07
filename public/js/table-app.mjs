@@ -1,11 +1,15 @@
 const head_menus = [
-    // {'label': 'Jour à Jour', 'type': 'jaj'},
-    // {'label': 'Booking manager', 'type': 'bookman'},
-    // {'label': 'Validation manager', 'type': 'valiman'},
-    // {'label': 'Confirmation manager', 'type': 'confman'},
-    {'label': 'Films', 'type': 'movies_list'},
-    {'label': 'Utilisateurs', 'type': 'user_params'},
-    {'label': 'Permissions', 'type': 'permissions'},
+    {"label": "Booking manager", "type": "bookman"},
+    {"label": "Confirmation manager", "type": "confman"},
+    {"label": "Contrats", "type": "contracts"},
+    {"label": "Dérogations", "type": "legal_kid_contract"},
+    {"label": "Jour à jour", "type": "jaj"},
+    {"label": "Paiements", "type": "payments"},
+    {"label": "Participants", "type": "participant"},
+    {"label": "PB projet", "type": "pb_p"},
+    {"label": "Rapports", "type": "reports"},
+    {"label": "Paramètres utilisateurs", "type": "user_params"},
+    {"label": "Permissions", "type": "permissions"},
 ];
 
 const app = {
@@ -48,11 +52,6 @@ const app = {
 
     init() {
         !app.navigationBuilt && app.buildNavigation();
-        if(!app.tableType()) {
-            return false;
-        }
-        app.buildInterface();
-        app.buildTable();
 
         app.checkAllRow = document.querySelector('.sheet-selector');
         // checkbox for select one row
@@ -64,6 +63,13 @@ const app = {
         // TODO: make event to button
         // Builder eventlistener 
         app.buildAddEventListener();
+
+        if(!app.tableType()) {
+            return false;
+        }
+        
+        app.buildInterface();
+        app.buildTable();
     },
 
     destroy() {
@@ -355,6 +361,12 @@ const app = {
                 tab[++index] = `<span class="slider round"></span>`;
                 tab[++index] = `</label>`;
                 break;
+            case 'input/textarea':
+                break;
+            case 'input/tel':
+                break;
+            case 'input/email':
+                break;
             case 'select':
                 tab[++index] = `<select class="active to-exchange">`;
                 params.options.forEach((option) => {
@@ -364,6 +376,31 @@ const app = {
                 break;
             case 'span/text':
                 tab[++index] = `<span class="active text">${value}</span>`;
+                break;
+            case 'span/date':
+                tab[++index] = `<span class="active date">${value}</span>`;
+                break;
+            case 'span/url':
+                tab[++index] = `<span class="active url">`;
+                tab[++index] = `<a class="absolute-link" href="${value}}" target="_blank">`;
+                tab[++index] = `${value}`;
+                tab[++index] = `</a>`;
+                tab[++index] = `</span>`;
+                break;
+            case 'span/img':
+                tab[++index] = `<span class="active img">`;
+                tab[++index] = `<img class="background-image" src="${value}}"/>`;
+                tab[++index] = `</span>`;
+                break;
+            case 'span/checkbox':
+                // TODO Prendre 2 icônes pour l'état checked et non-checked et les mettre en after du span
+                tab[++index] = `<span class="active checkbox${value == true ? ' checked' : ''}">${value}</span>`;
+                break;
+            case 'span/button':
+                tab[++index] = `<span class="active button">${value}</span>`;
+                break;
+            case 'textarea':
+                break;
             default:
                 break;
         }
@@ -371,7 +408,12 @@ const app = {
             [
                 'input/checkbox',
                 'select',
-                'span/text'
+                'span/text',
+                'span/date',
+                'span/url',
+                'span/img',
+                'span/checkbox',
+                'span/button'
             ].indexOf(params.cell_type) == -1
         ) {
             tab[++index] = `<span class="active to-exchange">${value}</span>`;

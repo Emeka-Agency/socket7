@@ -510,6 +510,17 @@ h1, .ts-xxxl {font-size: 32px;}
                 height 0.3s ease-in-out 0s;
 }
 
+.yellow-scrollbar::-webkit-scrollbar {background-color: #ddb40088;}
+.yellow-scrollbar::-webkit-scrollbar-button {background-color: #ddb40044;}
+.yellow-scrollbar::-webkit-scrollbar-thumb {background-color: #ddb400;}
+
+.thin-scrollbar::-webkit-scrollbar,
+.thin-scrollbar::-webkit-scrollbar-button,
+.thin-scrollbar::-webkit-scrollbar-thumb {
+    width: 2px;
+    height: 5px;
+}
+
 /* NO SCROLLBAR */
 
 .no-scrollbar {overflow: auto;}

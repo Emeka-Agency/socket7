@@ -1,0 +1,16 @@
+{
+    "name": "Dérogations",
+    "type": "legal_kid_contract",
+    "scheme": [
+        {"label": "nid", "cell_type": "span/url"},
+        {"label": "uid", "cell_type": "span/url"},
+        {"label": "Nom et prénom", "cell_type": "span/text"},
+        {"label": "Sexe", "cell_type": "span/text"},
+        {"label": "Date de naissance", "cell_type": "span/text"},
+        {"label": "Date des activités", "cell_type": "span/text"},
+        {"label": "Lieu des activités", "cell_type": "span/text"},
+        {"label": "Heures de début et de fin des activités journalière", "cell_type": "span/text"},
+        {"label": "Dérogation", "cell_type": "span/url"}
+    ],
+    "more_columns": false
+}

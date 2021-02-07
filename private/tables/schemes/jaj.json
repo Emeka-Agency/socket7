@@ -1,6 +1,23 @@
 {
     "name": "Jour à Jour",
     "type": "jaj",
-    "scheme": [],
+    "scheme": [
+        {"label": "nid", "cell_type": "span/text"},
+        {"label": "Date", "cell_type": "span/text"},
+        {"label": "Type", "cell_type": "span/text"},
+        {"label": "Attribution", "cell_type": "span/text"},
+        {"label": "Sexe", "cell_type": "span/text"},
+        {"label": "Âge", "cell_type": "span/text"},
+        {"label": "Nombre", "cell_type": "span/text"},
+        {"label": "Heures", "cell_type": "span/text"},
+        {"label": "Rue", "cell_type": "span/text"},
+        {"label": "Code Postal", "cell_type": "span/text"},
+        {"label": "Localité", "cell_type": "span/text"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"},
+        {"label": "", "cell_type": "span/url"}
+    ],
     "more_columns": false
 }

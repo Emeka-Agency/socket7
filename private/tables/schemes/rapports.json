@@ -1,0 +1,26 @@
+{
+    "name": "Rapports",
+    "type": "reports",
+    "scheme": [
+        {"label": "Date", "cell_type": "span/text"},
+        {"label": "Type", "cell_type": "span/text"},
+        {"label": "Nombre de présences", "cell_type": "span/text"},
+        {"label": "Rapport", "cell_type": "span/url"},
+        {"label": "JAJs", "cell_type": "span/url"},
+        {"label": "Les présences ont-elles bien été mise à jour?", "cell_type": "input/textarea"},
+        {"label": "Pourquoi ?", "cell_type": "input/textarea"},
+        {"label": "Tous les figurants étaient-ils présent?", "cell_type": "input/textarea"},
+        {"label": "Y-a t'il eu des désistements de dernière minutes?", "cell_type": "input/textarea"},
+        {"label": "Combien ?", "cell_type": "input/textarea"},
+        {"label": "Y-a t'il encore des contrats non signé à la fin de la journée?", "cell_type": "input/textarea"},
+        {"label": "Combien ?", "cell_type": "input/textarea"},
+        {"label": "Y a t'il des contrats manuscrit?", "cell_type": "input/textarea"},
+        {"label": "Combien?", "cell_type": "input/textarea"},
+        {"label": "Raison particulière ?", "cell_type": "input/textarea"},
+        {"label": "Y a t'il des événements particuliers à signaler?", "cell_type": "input/textarea"},
+        {"label": "Type d'événements rencontré", "cell_type": "input/textarea"},
+        {"label": "Veuillez détailler le ou les événement(s)", "cell_type": "input/textarea"},
+        {"label": "Remarque ou information générale", "cell_type": "input/textarea"}
+    ],
+    "more_columns": false
+}

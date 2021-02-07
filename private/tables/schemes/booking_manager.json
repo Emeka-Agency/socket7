@@ -1,6 +1,21 @@
 {
     "name": "Booking manager",
     "type": "bookman",
-    "scheme": [],
+    "scheme": [
+        {"label": "nid", "cell_type": "span/text"},
+        {"label": "Type de booking", "cell_type": "select", "options": [
+            {"label": "Essayage", "value": "essayage"},
+            {"label": "Figuration", "value": "figuration"},
+            {"label": "Silhouette", "value": "silhouette"}
+        ]},
+        {"label": "Date de booking - start", "cell_type": "span/date"},
+        {"label": "Date de booking - end", "cell_type": "span/date"},
+        {"label": "Adresse - Nom", "cell_type": "span/text"},
+        {"label": "Adresse - Rue", "cell_type": "span/text"},
+        {"label": "Adresse - CP", "cell_type": "span/text"},
+        {"label": "Adresse - Localité", "cell_type": "span/text"},
+        {"label": "Informations", "cell_type": "textarea"},
+        {"label": "Lien de modification", "cell_type": "span/url"}
+    ],
     "more_columns": false
 }

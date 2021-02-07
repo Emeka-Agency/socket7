@@ -1,0 +1,17 @@
+{
+    "name": "Participants",
+    "type": "participant",
+    "scheme": [
+        {"label": "nid", "cell_type": "span/url"},
+        {"label": "uid", "cell_type": "span/url"},
+        {"label": "photo portrait", "cell_type": "span/text"},
+        {"label": "Nom de famille", "cell_type": "span/text"},
+        {"label": "Prénom", "cell_type": "span/text"},
+        {"label": "Attribution", "cell_type": "span/text"},
+        {"label": "Type de booking", "cell_type": "span/text"},
+        {"label": "nbr", "cell_type": "span/text"},
+        {"label": "Date", "cell_type": "span/text"},
+        {"label": "Montant (€)", "cell_type": "span/text"}
+    ],
+    "more_columns": false
+}

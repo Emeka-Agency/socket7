@@ -9,7 +9,8 @@
             {"label": "INACTIVE", "value": "INACTIVE"}
         ]},
         {"label": "IS_ADMIN", "cell_type": "input/checkbox"},
-        {"label": "Téléphone", "cell_type": "input/tel"}
+        {"label": "Téléphone", "cell_type": "input/tel"},
+        {"label": "Mail", "cell_type": "input/email"}
     ],
     "more_columns": false
 }
